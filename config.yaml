@@ -1,0 +1,14 @@
+vocab_size: 200
+model_size: 128
+num_heads: 1
+hidden_size: 64
+dropout: 0.1
+num_layers: 1
+batch_size: 8
+
+epochs: 1
+eval_every: 1
+lr: 0.001
+weightdecay: 0.01
+
+save_as: default
