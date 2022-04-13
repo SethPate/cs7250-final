@@ -28,7 +28,7 @@ words = [
     "My",
     "name",
     "is",
-    "Pedro",
+    "TESTROBOT",
     "and",
     "I",
     "am",
@@ -66,6 +66,8 @@ layout_cytoscape = cyto.Cytoscape(
     autounselectify=False,
 )
 
+selecty_outputy = html.P(id='selecty-outputy',children='WHAZUP')
+
 # TODO: use translate trick to position by cneter point https://stackoverflow.com/questions/15328416/position-by-center-point-rather-than-top-left-point
 
 buttons_samples = html.Div(
@@ -80,7 +82,7 @@ buttons_samples = html.Div(
             id=f"button-sample-forward",
         ),
     ],
-    style={"position": "relative", "left": f"40px", "display":"inline-block"},
+    style={"position": "relative", "left": f"40px", "display": "inline-block"},
 )
 
 
@@ -96,9 +98,19 @@ buttons_heads = html.Div(
             id=f"button-head-forward",
         ),
     ],
-    style={"position": "relative", "display":"inline-block", "left": f"125px"},
+    style={"position": "relative", "display": "inline-block", "left": f"125px"},
 )
 
 layout = html.Div(
-    [html.H1("Explorer view"), layout_cytoscape, buttons_samples, buttons_heads]
+    [html.H1("Explorer view"), 
+    layout_cytoscape, 
+    selecty_outputy,
+    buttons_samples, 
+    buttons_heads]
 )
+
+@app.callback(Output('selecty-outputy', 'children'),
+                Input('explorer-view', 'tapNodeData'))
+def displayTapNodeData(data):
+    if data:
+        return "OH YEAH"

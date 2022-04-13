@@ -1,6 +1,7 @@
 import numpy as np
 import random
 
+
 def get_sentences():
     sentences = ["I am a sentence", "What a great day!"]
     dict_sentences = {i: sentence.split(" ") for i, sentence in enumerate(sentences)}

@@ -14,7 +14,7 @@ server = flask.Flask(__name__) # define flask app.server
 app = dash.Dash(
     __name__,
     server=server,
-    suppress_callback_exceptions=False,
+    suppress_callback_exceptions=True,
     external_stylesheets=[
         dbc.themes.BOOTSTRAP,
         FONT_AWESOME,
@@ -32,3 +32,6 @@ cache = Cache(app.server, config={
 app.layout = layout
 
 server = app.server
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
