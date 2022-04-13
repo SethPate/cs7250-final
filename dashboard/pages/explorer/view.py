@@ -7,12 +7,10 @@ from dash import html
 from dash.dependencies import Input
 from dash.dependencies import Output
 
-from .style import stylesheet
 from . import data
 
 
-def calc_div_height(words):
-    return len(words) * 20 + 60 + 20
+
 
 
 params = {
@@ -29,9 +27,13 @@ words = [
     "TESTROBOT"
 ]
 
-div_height = calc_div_height(words)
+cyto_data = {
+    'words' : words,
+    'attn' : np.random.random((len(words),len(words))),
+    'ff' : np.random.random((len(words)))
+}
 
-layout_cytoscape = data.get_cyto_layout(words, params)
+layout_cytoscape = data.get_cyto_layout(cyto_data, params)
 
 selecty_outputy = html.P(id='selecty-outputy',children='WHAZUP')
 

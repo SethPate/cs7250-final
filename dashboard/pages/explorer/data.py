@@ -1,11 +1,12 @@
 import numpy as np
 import random
 import dash_cytoscape as cyto
+from scipy.special import softmax
 from .style import stylesheet
 
 def calc_div_height(words):
     return len(words) * 20 + 60 + 20
-    
+
 def get_cyto_layout(words, params):
     div_height = calc_div_height(words)
     elements = get_node_dicts(words, params) + get_node_headers(params)
@@ -24,7 +25,11 @@ def get_cyto_layout(words, params):
 
     return layout
 
-def get_node_dicts(words, params):
+def get_node_dicts(cyto_data, params):
+    words = cyto_data['words']
+    attn = cyto_data['attn']
+    attn_smx = softmax(attn, axis=1) # sum over columns
+
     element_list = []
 
     # first column: Input Words
@@ -66,7 +71,7 @@ def get_node_dicts(words, params):
                         "label": word_attention,
                         "target": f"word_{j}_attention",
                         "source": f"word_{i}_input",
-                        "weight": np.random.rand() * 0.23,
+                        "weight": round(attn_smx[j][i] * 6,2)
                     },
                     "classes": "edge-attention",
                 }
