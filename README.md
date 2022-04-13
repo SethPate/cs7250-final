@@ -3,8 +3,8 @@ Seth Pate, Alberto Ceballos Arroyo, Tonia Wang
 
 Task Burndown:
 1. Better fake data (including layers, heads, etc) -- Seth
-2. Scroll up and down between words
-3. Scroll up and down between samples
+2. Scroll up and down between words -- Alberto
+3. Scroll left and right between samples/sentences
 4. Scroll left and right between attention heads
 5. Select word by clicking to highlight and show attention
 7. Visualize attention (by line weight / thickness?)
