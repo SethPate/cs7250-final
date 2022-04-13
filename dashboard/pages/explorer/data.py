@@ -10,8 +10,10 @@ def get_sentences():
 
 def get_node_dicts(words, params):
     element_list = []
+
+    # first column: Input Words
+    column = 0
     for i, word_input in enumerate(words):
-        column = 0
         element_list.append(
             {
                 "data": {"id": f"word_{i}_input", "label": word_input},
@@ -24,8 +26,9 @@ def get_node_dicts(words, params):
             }
         )
 
+    # first column: Attended Words
+    column = 1
     for j, word_attention in enumerate(words):
-        column = 1
         element_list.append(
             {
                 "data": {"id": f"word_{j}_attention", "label": word_attention},
@@ -37,6 +40,8 @@ def get_node_dicts(words, params):
                 "classes": "node-word",
             }
         )
+
+        # edges between words 
         for i, word_input in enumerate(words):
             element_list.append(
                 {
@@ -51,6 +56,7 @@ def get_node_dicts(words, params):
                 }
             )
 
+    # feedforward layer
     column = 2
     for z in range(len(words)):
         element_list.append(
@@ -83,8 +89,8 @@ def get_node_dicts(words, params):
                 }
             )
 
+    # last linear layer
     column = 3
-
     element_list.append(
         {
             "data": {
