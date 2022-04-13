@@ -1,12 +1,28 @@
 import numpy as np
 import random
+import dash_cytoscape as cyto
+from .style import stylesheet
 
+def calc_div_height(words):
+    return len(words) * 20 + 60 + 20
+    
+def get_cyto_layout(words, params):
+    div_height = calc_div_height(words)
+    elements = get_node_dicts(words, params) + get_node_headers(params)
 
-def get_sentences():
-    sentences = ["I am a sentence", "What a great day!"]
-    dict_sentences = {i: sentence.split(" ") for i, sentence in enumerate(sentences)}
-    return dict_sentences
+    layout = cyto.Cytoscape(
+    id="explorer-view",
+    layout={"name": "preset", "fit": True},
+    style={"width": "100%", "height": f"{div_height}px"},
+    panningEnabled=False,
+    zoomingEnabled=False,
+    elements=elements,
+    stylesheet=stylesheet,
+    autoungrabify=True,
+    autounselectify=False,
+    )
 
+    return layout
 
 def get_node_dicts(words, params):
     element_list = []

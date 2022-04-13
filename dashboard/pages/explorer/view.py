@@ -1,4 +1,3 @@
-import dash_cytoscape as cyto
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -8,8 +7,8 @@ from dash import html
 from dash.dependencies import Input
 from dash.dependencies import Output
 
-from . import data
 from .style import stylesheet
+from . import data
 
 
 def calc_div_height(words):
@@ -23,48 +22,16 @@ params = {
     "y_first_node": 60,
 }
 
-dict_sentences = data.get_sentences()
 words = [
     "My",
     "name",
     "is",
-    "TESTROBOT",
-    "and",
-    "I",
-    "am",
-    "a",
-    "student",
+    "TESTROBOT"
 ]
 
 div_height = calc_div_height(words)
 
-
-# TODO: separate logic for generating nodes and edges into several functions
-# TODO: move data logic into a separate python file ("model")
-# TODO: add buttons below  graph to change sample, head
-# TODO: add tooltips to nodes
-# TODO: add avg and probabilities below output and class columns
-# TODO: when highlighting at least one node, remove all attention edges unrelated to the selected nodes
-# TODO: enable using real attention data for edges
-# TODO: generate a good line width map for edges
-# TODO: generate a good color map for the outputs and the class
-
-
-elements = data.get_node_dicts(words, params) + data.get_node_headers(params)
-
-# TODO: consider having several views for viewing several layers or heads of attention (?)
-
-layout_cytoscape = cyto.Cytoscape(
-    id="explorer-view",
-    layout={"name": "preset", "fit": True},
-    style={"width": "100%", "height": f"{div_height}px"},
-    panningEnabled=False,
-    zoomingEnabled=False,
-    elements=elements,
-    stylesheet=stylesheet,
-    autoungrabify=True,
-    autounselectify=False,
-)
+layout_cytoscape = data.get_cyto_layout(words, params)
 
 selecty_outputy = html.P(id='selecty-outputy',children='WHAZUP')
 
