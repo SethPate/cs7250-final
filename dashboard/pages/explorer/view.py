@@ -11,32 +11,30 @@ from dash.dependencies import Output
 from . import data
 from .style import stylesheet
 
-
-def calc_div_height(words):
-    return len(words) * 20 + 60 + 20
-
-
 params = {
     "x_space_between_nodes": 200,
     "y_space_between_nodes": 20,
-    "x_first_node": 100,
-    "y_first_node": 60,
+    "x_first_node": 50,
+    "current_top_node_word": 0,
+    "current_top_node_attention": 0,
+    "y_first_node": 9,
+    "max_nodes_to_visualize": 9,
+    "words": [
+        "My",
+        "name",
+        "is",
+        "Pedro",
+        "and",
+        "I",
+        "am",
+        "a",
+        "student",
+        "in",
+        "CS",
+    ],
 }
 
 dict_sentences = data.get_sentences()
-words = [
-    "My",
-    "name",
-    "is",
-    "Pedro",
-    "and",
-    "I",
-    "am",
-    "a",
-    "student",
-]
-
-div_height = calc_div_height(words)
 
 
 # TODO: separate logic for generating nodes and edges into several functions
@@ -50,14 +48,15 @@ div_height = calc_div_height(words)
 # TODO: generate a good color map for the outputs and the class
 
 
-elements = data.get_node_dicts(words, params) + data.get_node_headers(params)
+elements = data.get_node_dicts(params)  # + data.get_node_headers(params)
 
-# TODO: consider having several views for viewing several layers or heads of attention (?)
+# TODO: consider having several views for viewing several layers
+# or heads of attention (?)
 
 layout_cytoscape = cyto.Cytoscape(
-    id="explorer-view",
+    id="explorer-view-cytoscape",
     layout={"name": "preset", "fit": True},
-    style={"width": "100%", "height": f"{div_height}px"},
+    style={"width": "800px", "height": f"{params['max_nodes_to_visualize']*20+2}px"},
     panningEnabled=False,
     zoomingEnabled=False,
     elements=elements,
@@ -66,7 +65,36 @@ layout_cytoscape = cyto.Cytoscape(
     autounselectify=False,
 )
 
+
 # TODO: use translate trick to position by cneter point https://stackoverflow.com/questions/15328416/position-by-center-point-rather-than-top-left-point
+
+
+buttons_up = html.Div(
+    [
+        html.Button(
+            "🠹",
+            id="button-word-up",
+        ),
+        html.Button(
+            "🠹",
+            id="button-attention-up",
+        ),
+    ]
+)
+
+buttons_down = html.Div(
+    [
+        html.Button(
+            "🠻",
+            id="button-word-down",
+        ),
+        html.Button(
+            "🠻",
+            id="button-attention-down",
+        ),
+    ]
+)
+
 
 buttons_samples = html.Div(
     [
@@ -80,7 +108,7 @@ buttons_samples = html.Div(
             id=f"button-sample-forward",
         ),
     ],
-    style={"position": "relative", "left": f"40px", "display":"inline-block"},
+    style={"position": "relative", "left": f"40px", "display": "inline-block"},
 )
 
 
@@ -96,9 +124,17 @@ buttons_heads = html.Div(
             id=f"button-head-forward",
         ),
     ],
-    style={"position": "relative", "display":"inline-block", "left": f"125px"},
+    style={"position": "relative", "display": "inline-block", "left": f"125px"},
 )
 
 layout = html.Div(
-    [html.H1("Explorer view"), layout_cytoscape, buttons_samples, buttons_heads]
+    [
+        dcc.Store(id="explorer-view-store", data=params),
+        html.H1("Explorer view"),
+        buttons_up,
+        layout_cytoscape,
+        buttons_down,
+        buttons_samples,
+        buttons_heads,
+    ]
 )

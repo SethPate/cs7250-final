@@ -1,5 +1,7 @@
-import numpy as np
 import random
+
+import numpy as np
+
 
 def get_sentences():
     sentences = ["I am a sentence", "What a great day!"]
@@ -7,7 +9,8 @@ def get_sentences():
     return dict_sentences
 
 
-def get_node_dicts(words, params):
+def get_node_dicts(params):
+    words = params["words"]
     element_list = []
     for i, word_input in enumerate(words):
         column = 0
@@ -17,7 +20,9 @@ def get_node_dicts(words, params):
                 "position": {
                     "x": params["x_first_node"]
                     + column * params["x_space_between_nodes"],
-                    "y": params["y_first_node"] + i * params["y_space_between_nodes"],
+                    "y": params["y_first_node"]
+                    + (params["current_top_node_word"] + i)
+                    * params["y_space_between_nodes"],
                 },
                 "classes": "node-word",
             }
@@ -31,7 +36,9 @@ def get_node_dicts(words, params):
                 "position": {
                     "x": params["x_first_node"]
                     + column * params["x_space_between_nodes"],
-                    "y": params["y_first_node"] + j * params["y_space_between_nodes"],
+                    "y": params["y_first_node"]
+                    + (params["current_top_node_attention"] + j)
+                    * params["y_space_between_nodes"],
                 },
                 "classes": "node-word",
             }
@@ -64,7 +71,9 @@ def get_node_dicts(words, params):
                 "position": {
                     "x": params["x_first_node"]
                     + column * params["x_space_between_nodes"],
-                    "y": params["y_first_node"] + z * params["y_space_between_nodes"],
+                    "y": params["y_first_node"]
+                    + (params["current_top_node_attention"] + z)
+                    * params["y_space_between_nodes"],
                 },
                 "classes": "node-output",
             }
@@ -93,8 +102,7 @@ def get_node_dicts(words, params):
             },
             "position": {
                 "x": params["x_first_node"] + column * params["x_space_between_nodes"],
-                "y": params["y_first_node"]
-                + len(words) // 2 * params["y_space_between_nodes"],
+                "y": len(words) // 2 * params["y_space_between_nodes"] - 10,
             },
             "classes": "node-class",
         }

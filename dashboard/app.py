@@ -9,25 +9,24 @@ from layout.layout import layout
 import flask
 
 
-server = flask.Flask(__name__) # define flask app.server
+server = flask.Flask(__name__)  # define flask app.server
 
 app = dash.Dash(
     __name__,
     server=server,
-    suppress_callback_exceptions=False,
+    suppress_callback_exceptions=True,
     external_stylesheets=[
         dbc.themes.BOOTSTRAP,
         FONT_AWESOME,
     ],
     meta_tags=[
-    #    {"name": "viewport", "content": "width=device-width, initial-scale=1"}
-    ]
+        #    {"name": "viewport", "content": "width=device-width, initial-scale=1"}
+    ],
 )
 
-cache = Cache(app.server, config={
-    'CACHE_TYPE': 'filesystem',
-    'CACHE_DIR': 'cache-directory'
-})
+cache = Cache(
+    app.server, config={"CACHE_TYPE": "filesystem", "CACHE_DIR": "cache-directory"}
+)
 
 app.layout = layout
 
