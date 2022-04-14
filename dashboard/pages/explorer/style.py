@@ -36,6 +36,8 @@ stylesheet = [
             "lineColor": "black",
             # "target-arrow-shape": "vee",
             "curve-style": "bezier",
+            'source-endpoint': '50% 0',
+            'target-endpoint': '-50% 0'
             # "arrow-scale": "data(weight)*5",
         },
     },
@@ -59,8 +61,8 @@ stylesheet = [
         "style": {
             "background-color": "data(color)",
             "border-width": "1px",
-            "width": "30px",
-            "height": "20px",
+            "width": "10px",
+            "height": "9px",
         },
     },
     {

@@ -54,9 +54,7 @@ def update_explorer_view_store(
             cytoscape_params["current_sample"] -= 1
             cytoscape_params["current_top_node_attention"] = 0
     if "button-sample-forward" in id_btn:
-        if cytoscape_params["current_sample"] < len(
-            cytoscape_params["sentences"]
-        ) - 1:
+        if cytoscape_params["current_sample"] < len(cytoscape_params["sentences"]) - 1:
             cytoscape_params["current_sample"] += 1
             cytoscape_params["current_top_node_attention"] = 0
     return cytoscape_params
@@ -77,3 +75,12 @@ def update_elements(cytoscape_params):
 def update_id_sample(cytoscape_params):
     sample_id = cytoscape_params["current_sample"]
     return f"Sample {str(sample_id+1).zfill(3)}"
+
+
+@app.callback(
+    Output("text-sentence", "children"),
+    Input("explorer-view-store", "data"),
+)
+def update_text_sentence(cytoscape_params):
+    sample_id = cytoscape_params["current_sample"]
+    return cytoscape_params["raw_sentences"][sample_id]

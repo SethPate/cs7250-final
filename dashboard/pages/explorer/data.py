@@ -8,21 +8,24 @@ from utils.functions import softmax
 from .style import stylesheet
 
 
-def get_dummy_sentences():
-    sentences = [
+def get_dummy_sentences(params):
+    raw_sentences = [
         "I am a sentence!",
-        "What a great day! Let's go out!",
+        "What a great day! Let's go out in a couple minutes and get some icecream!",
         "a b c d e f g h i j k",
     ]
-    sentences = [sentence.split(" ") for sentence in sentences]
+    sentences = [sentence.split(" ") for sentence in raw_sentences]
     attention_weights = [
         softmax(np.random.random((len(sentence), len(sentence))) * 100, axis=1)
         for sentence in sentences
     ]
-
-    scores = [np.random.random(len(sentence)) for sentence in sentences]
+    scores = [
+        np.random.random(params["n_weights_ff"]).reshape(16, -1)
+        for sentence in sentences
+    ]
 
     dict_sentences = {
+        "raw_sentences": raw_sentences,
         "sentences": sentences,
         "attention_weights": attention_weights,
         "scores": scores,
@@ -82,36 +85,39 @@ def get_node_dicts(params):
             )
 
     column = 2
-    for z in range(len(words)):
-        element_list.append(
-            {
-                "data": {
-                    "id": f"word_{z}_output",
-                    "label": "",
-                    "color": mcolors.to_hex(cm.bwr(scores[z])),
-                },
-                "position": {
-                    "x": params["x_first_node"]
-                    + column * params["x_space_between_nodes"],
-                    "y": params["y_first_node"]
-                    + (params["current_top_node_attention"] + z)
-                    * params["y_space_between_nodes"],
-                },
-                "classes": "node-output",
-            }
-        )
-        for j, word_input in enumerate(words):
+    for z_i in range(len(scores)):
+        for z_j in range(len(scores[0])):
             element_list.append(
                 {
                     "data": {
-                        "id": f"attention_{j}_output_{z}",
-                        "source": f"word_{j}_attention",
-                        "target": f"word_{z}_output",
-                        "weight": np.random.rand() * 0.25,
+                        "id": f"ff_{z_i}_{z_j}_output",
+                        "label": "",
+                        "color": mcolors.to_hex(cm.bwr(scores[z_i][z_j])),
                     },
-                    "classes": "edge-attention",
+                    "position": {
+                        "x": params["x_first_node"]
+                        + column * params["x_space_between_nodes"]
+                        - 50
+                        + z_j * params["x_space_between_nodes_ff"],
+                        "y": params["y_first_node_ff"]
+                        + 15
+                        + z_i * params["y_space_between_nodes_ff"],
+                    },
+                    "classes": "node-output",
                 }
             )
+        # for j, word_input in enumerate(words):
+        #     element_list.append(
+        #         {
+        #             "data": {
+        #                 "id": f"attention_{j}_output_{z}",
+        #                 "source": f"word_{j}_attention",
+        #                 "target": f"word_{z}_output",
+        #                 "weight": np.random.rand() * 0.25,
+        #             },
+        #             "classes": "edge-attention",
+        #         }
+        #     )
 
     column = 3
 
@@ -124,7 +130,9 @@ def get_node_dicts(params):
             },
             "position": {
                 "x": params["x_first_node"] + column * params["x_space_between_nodes"],
-                "y": len(words) // 2 * params["y_space_between_nodes"] - 10,
+                "y": (params["max_nodes_to_visualize"] // 2)
+                * params["y_space_between_nodes"]
+                + 7,
             },
             "classes": "node-class",
         }
@@ -178,7 +186,7 @@ def get_cyto_layout(params):
         layout={"name": "preset", "fit": True},
         style={
             "width": "800px",
-            "height": f"{params['max_nodes_to_visualize']*20+3}px",
+            "height": f"{params['max_nodes_to_visualize']*20+4}px",
         },
         panningEnabled=False,
         zoomingEnabled=False,
