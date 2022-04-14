@@ -95,7 +95,7 @@ headers = html.Div(
 buttons_up = html.Div(
     [
         html.Button(
-            "🠹",
+            "up",
             id="button-word-up",
             className="button-scroll",
             style={
@@ -105,7 +105,7 @@ buttons_up = html.Div(
             },
         ),
         html.Button(
-            "🠹",
+            "up",
             id="button-attention-up",
             className="button-scroll",
             style={
@@ -120,7 +120,7 @@ buttons_up = html.Div(
 buttons_down = html.Div(
     [
         html.Button(
-            "🠻",
+            "down",
             id="button-word-down",
             className="button-scroll",
             style={
@@ -130,7 +130,7 @@ buttons_down = html.Div(
             },
         ),
         html.Button(
-            "🠻",
+            "down",
             id="button-attention-down",
             className="button-scroll",
             style={
