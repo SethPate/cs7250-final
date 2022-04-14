@@ -47,7 +47,7 @@ stylesheet = [
             "background-color": "white",
             "border-width": "0px",
             "font-size": "20px",
-            "font-weight": "bold",
+            "fontWeight": "bold",
         },
     },
     {
