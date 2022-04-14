@@ -126,7 +126,7 @@ def get_node_dicts(params):
             "data": {
                 "id": "classification_result",
                 "label": "",
-                "color": "red",
+                "color": mcolors.to_hex(cm.bwr(np.mean(scores))),
             },
             "position": {
                 "x": params["x_first_node"] + column * params["x_space_between_nodes"],
