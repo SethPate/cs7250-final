@@ -1,16 +1,36 @@
-import random
-
+import dash_cytoscape as cyto
+import matplotlib.cm as cm
+import matplotlib.colors as mcolors
+import matplotlib.colors as mcol
 import numpy as np
+from utils.functions import softmax
+
+from .style import stylesheet
 
 
-def get_sentences():
-    sentences = ["I am a sentence", "What a great day!"]
-    dict_sentences = {i: sentence.split(" ") for i, sentence in enumerate(sentences)}
+def get_dummy_sentences():
+    sentences = ["I am a sentence", "What a great day!", "a b c d e f g h i j k"]
+    sentences = [sentence.split(" ") for sentence in sentences]
+    attention_weights = [
+        softmax(np.random.random((len(sentence), len(sentence))) * 100, axis=1)
+        for sentence in sentences
+    ]
+
+    scores = [np.random.random(len(sentence)) for sentence in sentences]
+
+    dict_sentences = {
+        "sentences": sentences,
+        "attention_weights": attention_weights,
+        "scores": scores,
+    }
     return dict_sentences
 
 
 def get_node_dicts(params):
-    words = params["words"]
+    current_sample = params["current_sample"]
+    words = params["sentences"][current_sample]
+    scores = params["scores"][current_sample]
+    attention_weights = params["attention_weights"][current_sample]
     element_list = []
     for i, word_input in enumerate(words):
         column = 0
@@ -51,7 +71,7 @@ def get_node_dicts(params):
                         "label": word_attention,
                         "target": f"word_{j}_attention",
                         "source": f"word_{i}_input",
-                        "weight": np.random.rand() * 0.23,
+                        "weight": attention_weights[i][j],
                     },
                     "classes": "edge-attention",
                 }
@@ -64,9 +84,7 @@ def get_node_dicts(params):
                 "data": {
                     "id": f"word_{z}_output",
                     "label": "",
-                    "color": random.choice(
-                        ["blue", "lightblue", "cyan", "pink", "red"]
-                    ),
+                    "color": mcolors.to_hex(cm.bwr(scores[z])),
                 },
                 "position": {
                     "x": params["x_first_node"]
@@ -115,6 +133,7 @@ def get_node_dicts(params):
 
 
 def get_node_headers(params):
+
     return [
         {
             "data": {"id": "header_input", "label": "Input words"},
@@ -146,3 +165,22 @@ def get_node_headers(params):
             "classes": "node-header",
         },
     ]
+
+
+def get_cyto_layout(params):
+    elements = get_node_dicts(params)  # + data.get_node_headers(params)
+    layout_cytoscape = cyto.Cytoscape(
+        id="explorer-view-cytoscape",
+        layout={"name": "preset", "fit": True},
+        style={
+            "width": "800px",
+            "height": f"{params['max_nodes_to_visualize']*20+3}px",
+        },
+        panningEnabled=False,
+        zoomingEnabled=False,
+        elements=elements,
+        stylesheet=stylesheet,
+        autoungrabify=True,
+        autounselectify=False,
+    )
+    return layout_cytoscape

@@ -8,6 +8,7 @@ from layout.sidebar.callbacks import toggle_classname
 from layout.sidebar.callbacks import toggle_collapse
 from pages.explorer.callbacks import update_elements
 from pages.explorer.callbacks import update_explorer_view_store
+from pages.explorer.callbacks import update_id_sample
 from routes import render_page_content
 
 # from pages.gdp.gdp_callbacks import update_figure

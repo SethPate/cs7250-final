@@ -1,4 +1,3 @@
-import dash_cytoscape as cyto
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -9,7 +8,6 @@ from dash.dependencies import Input
 from dash.dependencies import Output
 
 from . import data
-from .style import stylesheet
 
 params = {
     "x_space_between_nodes": 200,
@@ -19,23 +17,10 @@ params = {
     "current_top_node_attention": 0,
     "y_first_node": 9,
     "max_nodes_to_visualize": 9,
-    "words": [
-        "My",
-        "name",
-        "is",
-        "Pedro",
-        "and",
-        "I",
-        "am",
-        "a",
-        "student",
-        "in",
-        "CS",
-    ],
+    "current_sample": 0,
 }
 
-dict_sentences = data.get_sentences()
-
+params.update(data.get_dummy_sentences())
 
 # TODO: separate logic for generating nodes and edges into several functions
 # TODO: move data logic into a separate python file ("model")
@@ -45,39 +30,37 @@ dict_sentences = data.get_sentences()
 # TODO: when highlighting at least one node, remove all attention edges unrelated to the selected nodes
 # TODO: enable using real attention data for edges
 # TODO: generate a good line width map for edges
-# TODO: generate a good color map for the outputs and the class
-
-
-elements = data.get_node_dicts(params)  # + data.get_node_headers(params)
-
+# TODO: generate a good color map for the class
 # TODO: consider having several views for viewing several layers
 # or heads of attention (?)
 
-layout_cytoscape = cyto.Cytoscape(
-    id="explorer-view-cytoscape",
-    layout={"name": "preset", "fit": True},
-    style={"width": "800px", "height": f"{params['max_nodes_to_visualize']*20+2}px"},
-    panningEnabled=False,
-    zoomingEnabled=False,
-    elements=elements,
-    stylesheet=stylesheet,
-    autoungrabify=True,
-    autounselectify=False,
-)
+layout_cytoscape = data.get_cyto_layout(params)
 
 
 # TODO: use translate trick to position by cneter point https://stackoverflow.com/questions/15328416/position-by-center-point-rather-than-top-left-point
 
+
+scroll_btn_x_positions = [42, 219]
 
 buttons_up = html.Div(
     [
         html.Button(
             "🠹",
             id="button-word-up",
+            style={
+                "position": "relative",
+                "display": "inline-block",
+                "left": f"{scroll_btn_x_positions[0]}px",
+            },
         ),
         html.Button(
             "🠹",
             id="button-attention-up",
+            style={
+                "position": "relative",
+                "display": "inline-block",
+                "left": f"{scroll_btn_x_positions[1]}px",
+            },
         ),
     ]
 )
@@ -87,10 +70,20 @@ buttons_down = html.Div(
         html.Button(
             "🠻",
             id="button-word-down",
+            style={
+                "position": "relative",
+                "display": "inline-block",
+                "left": f"{scroll_btn_x_positions[0]}px",
+            },
         ),
         html.Button(
             "🠻",
             id="button-attention-down",
+            style={
+                "position": "relative",
+                "display": "inline-block",
+                "left": f"{scroll_btn_x_positions[1]}px",
+            },
         ),
     ]
 )
@@ -100,15 +93,15 @@ buttons_samples = html.Div(
     [
         html.Button(
             "<",
-            id=f"button-sample-back",
+            id="button-sample-back",
         ),
         html.Span(f"Sample {'1'.zfill(3)}", id=f"text-id-sample"),
         html.Button(
             ">",
-            id=f"button-sample-forward",
+            id="button-sample-forward",
         ),
     ],
-    style={"position": "relative", "left": f"40px", "display": "inline-block"},
+    style={"position": "relative", "left": f"-10px", "display": "inline-block"},
 )
 
 
@@ -116,15 +109,15 @@ buttons_heads = html.Div(
     [
         html.Button(
             "<",
-            id=f"button-head-back",
+            id="button-head-back",
         ),
         html.Span(f"Head {'1'.zfill(2)}", id=f"text-id-head"),
         html.Button(
             ">",
-            id=f"button-head-forward",
+            id="button-head-forward",
         ),
     ],
-    style={"position": "relative", "display": "inline-block", "left": f"125px"},
+    style={"position": "relative", "display": "inline-block", "left": f"72px"},
 )
 
 layout = html.Div(
