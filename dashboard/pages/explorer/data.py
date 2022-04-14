@@ -10,14 +10,15 @@ from .style import stylesheet
 
 def get_dummy_sentences(params):
     raw_sentences = [
-            "I went and saw this movie last night after being coaxed to by a few friends of mine. I'll admit that I was reluctant to see it because from what I knew of Ashton Kutcher he was only able to do comedy.",
-            "I think this is one of those few movies that I want to rate it as low as possible just to pay it a compliment."
+        "I went and saw this movie last night after being coaxed to by a few friends of mine. I'll admit that I was reluctant to see it because from what I knew of Ashton Kutcher he was only able to do comedy.",
+        "I think this is one of those few movies that I want to rate it as low as possible just to pay it a compliment.",
     ]
     sentences = [sentence.split(" ") for sentence in raw_sentences]
-    attention_weights = [
+    n_heads = params["n_heads"]
+    attention_weights = [[
         softmax(np.random.random((len(sentence), len(sentence))) * 100, axis=1)
         for sentence in sentences
-    ]
+    ] for i in range(n_heads)]
     scores = [
         np.random.random(params["n_weights_ff"]).reshape(16, -1)
         for sentence in sentences
@@ -34,9 +35,10 @@ def get_dummy_sentences(params):
 
 def get_node_dicts(params):
     current_sample = params["current_sample"]
+    current_head = params["current_head"]
     words = params["sentences"][current_sample]
     scores = params["scores"][current_sample]
-    attention_weights = params["attention_weights"][current_sample]
+    attention_weights = params["attention_weights"][current_head][current_sample]
     element_list = []
     for i, word_input in enumerate(words):
         column = 0
@@ -99,7 +101,10 @@ def get_node_dicts(params):
                         - 50
                         + z_j * params["x_space_between_nodes_ff"],
                         "y": params["y_first_node_ff"]
-                        + 15
+                        + params["max_nodes_to_visualize"]
+                        // 2
+                        * params["y_space_between_nodes"]
+                        - 8 * params["y_space_between_nodes_ff"]
                         + z_i * params["y_space_between_nodes_ff"],
                     },
                     "classes": "node-output",

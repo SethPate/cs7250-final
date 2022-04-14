@@ -16,6 +16,8 @@ from .data import get_node_dicts
     Input("button-attention-down", "n_clicks"),
     Input("button-sample-back", "n_clicks"),
     Input("button-sample-forward", "n_clicks"),
+    Input("button-head-back", "n_clicks"),
+    Input("button-head-forward", "n_clicks"),
     State("explorer-view-store", "data"),
 )
 def update_explorer_view_store(
@@ -25,6 +27,8 @@ def update_explorer_view_store(
     btn_attn_down,
     btn_sample_back,
     btn_sample_forward,
+    btn_head_back,
+    btn_head_forward,
     cytoscape_params,
 ):
     id_btn = [p["prop_id"] for p in callback_context.triggered][0]
@@ -59,6 +63,12 @@ def update_explorer_view_store(
             cytoscape_params["current_sample"] += 1
             cytoscape_params["current_top_node_attention"] = 0
             cytoscape_params["current_top_node_word"] = 0
+    if "button-head-back" in id_btn:
+        if cytoscape_params["current_head"] > 0:
+            cytoscape_params["current_head"] -= 1
+    if "button-head-forward" in id_btn:
+        if cytoscape_params["current_head"] < cytoscape_params["n_heads"] - 1:
+            cytoscape_params["current_head"] += 1
     return cytoscape_params
 
 
@@ -77,6 +87,16 @@ def update_elements(cytoscape_params):
 def update_id_sample(cytoscape_params):
     sample_id = cytoscape_params["current_sample"]
     return f"Sample {str(sample_id+1).zfill(3)}"
+
+
+@app.callback(
+    Output("text-id-head", "children"),
+    Input("explorer-view-store", "data"),
+)
+def update_id_head(cytoscape_params):
+    sample_id = cytoscape_params["current_head"]
+    return f"Head {str(sample_id+1).zfill(2)}"
+
 
 
 @app.callback(

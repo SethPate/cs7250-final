@@ -16,12 +16,14 @@ params = {
     "current_top_node_word": 0,
     "current_top_node_attention": 0,
     "y_first_node": 9,
-    "max_nodes_to_visualize": 9,
+    "max_nodes_to_visualize": 15,
     "current_sample": 0,
+    "current_head": 0,
     "n_weights_ff": 128,
     "y_first_node_ff": 5,
     "x_space_between_nodes_ff": 10,
     "y_space_between_nodes_ff": 9,
+    "n_heads": 4,
 }
 
 params.update(data.get_dummy_sentences(params))
@@ -52,6 +54,8 @@ current_sentence = html.Div(
             "",
             id="text-sentence",
         ),
+        html.Br(),
+        html.Br(),
     ],
     className="text-sentence",
     style={
@@ -95,7 +99,7 @@ headers = html.Div(
 buttons_up = html.Div(
     [
         html.Button(
-            "up",
+            "↑",
             id="button-word-up",
             className="button-scroll",
             style={
@@ -105,7 +109,7 @@ buttons_up = html.Div(
             },
         ),
         html.Button(
-            "up",
+            "↑",
             id="button-attention-up",
             className="button-scroll",
             style={
@@ -120,7 +124,7 @@ buttons_up = html.Div(
 buttons_down = html.Div(
     [
         html.Button(
-            "down",
+            "↓",
             id="button-word-down",
             className="button-scroll",
             style={
@@ -130,7 +134,7 @@ buttons_down = html.Div(
             },
         ),
         html.Button(
-            "down",
+            "↓",
             id="button-attention-down",
             className="button-scroll",
             style={
