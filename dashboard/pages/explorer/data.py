@@ -8,10 +8,10 @@ from utils.functions import softmax
 from .style import stylesheet
 
 
-def get_dummy_sentences():
-    sentences = [
-            "I went and saw this movie last night after being coaxed to by a few friends of mine. I'll admit that I was reluctant to see it because from what I knew of Ashton Kutcher he was only able to do comedy.",
-            "I think this is one of those few movies that I want to rate it as low as possible just to pay it a compliment."
+def get_dummy_sentences(params):
+    raw_sentences = [
+        "I went and saw this movie last night after being coaxed to by a few friends of mine. I'll admit that I was reluctant to see it because from what I knew of Ashton Kutcher he was only able to do comedy.",
+        "I think this is one of those few movies that I want to rate it as low as possible just to pay it a compliment.",
     ]
     sentences = [sentence.split(" ") for sentence in raw_sentences]
     attention_weights = [

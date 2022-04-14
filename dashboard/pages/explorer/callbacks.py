@@ -53,10 +53,12 @@ def update_explorer_view_store(
         if cytoscape_params["current_sample"] > 0:
             cytoscape_params["current_sample"] -= 1
             cytoscape_params["current_top_node_attention"] = 0
+            cytoscape_params["current_top_node_word"] = 0
     if "button-sample-forward" in id_btn:
         if cytoscape_params["current_sample"] < len(cytoscape_params["sentences"]) - 1:
             cytoscape_params["current_sample"] += 1
             cytoscape_params["current_top_node_attention"] = 0
+            cytoscape_params["current_top_node_word"] = 0
     return cytoscape_params
 
 
