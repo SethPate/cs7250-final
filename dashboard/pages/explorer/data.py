@@ -10,9 +10,8 @@ from .style import stylesheet
 
 def get_dummy_sentences():
     sentences = [
-        "I am a sentence!",
-        "What a great day! Let's go out!",
-        "a b c d e f g h i j k",
+            "I went and saw this movie last night after being coaxed to by a few friends of mine. I'll admit that I was reluctant to see it because from what I knew of Ashton Kutcher he was only able to do comedy.",
+            "I think this is one of those few movies that I want to rate it as low as possible just to pay it a compliment."
     ]
     sentences = [sentence.split(" ") for sentence in sentences]
     attention_weights = [
