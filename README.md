@@ -3,11 +3,11 @@ Seth Pate, Alberto Ceballos Arroyo, Tonia Wang
 
 Task Burndown:
 1. Better fake data (including layers, heads, etc) -- Seth
-2. Scroll up and down between words -- Alberto
-3. Scroll left and right between samples/sentences
-4. Scroll left and right between attention heads
+2. Scroll up and down between words -- DONE
+3. Scroll left and right between samples/sentences -- DONE
+4. Scroll left and right between attention heads -- Alberto
 5. Select word by clicking to highlight and show attention
-7. Visualize attention (by line weight / thickness?)
+7. Visualize attention (by line weight / thickness?) -- Kind of done, must test with real data
 8. Select multiple words at a time (brushing?)
 9. Data should update to the right based on what's selected (linking?)
 10. Visualize feedforward layer weights
