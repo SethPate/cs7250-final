@@ -9,7 +9,7 @@ from .style import stylesheet
 
 
 def get_dummy_sentences():
-    sentences = ["I am a sentence", "What a great day!", "a b c d e f g h i j k"]
+    sentences = ["I am a sentence with several words!", "What a great day! Let's go out!", "a b c d e f g h i j k"]
     sentences = [sentence.split(" ") for sentence in sentences]
     attention_weights = [
         softmax(np.random.random((len(sentence), len(sentence))) * 100, axis=1)
