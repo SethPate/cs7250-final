@@ -13,7 +13,7 @@ stylesheet = [
             "text-halign": "center",
             "text-valign": "center",
             "width": "100px",
-            "height": "label",
+            "height": "14px",
             "shape": "square",
             "overlay-opacity": 0,
         },
