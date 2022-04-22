@@ -1,9 +1,9 @@
 vocab_size: 200
 model_size: 128
-num_heads: 1
-hidden_size: 64
+num_heads: 2
+hidden_size: 128
 dropout: 0.1
-num_layers: 1
+num_layers: 2
 batch_size: 8
 
 epochs: 1

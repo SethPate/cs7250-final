@@ -14,7 +14,7 @@ Uses code from https://pytorch.org/tutorials/beginner/transformer_tutorial.html.
 import csv
 import yaml
 import os
-import tqdm
+from tqdm import tqdm
 import transformer as tf
 import torch
 from torch.utils.data import DataLoader
@@ -30,17 +30,13 @@ def get_data(batch_size:int) -> (DataLoader, DataLoader):
     """Just IMDB so far."""
     train_iter = IMDB(split="train") # [(label, line),...]
     tokenizer = get_tokenizer('basic_english')
-    #print('train_iter, test_, tokenizer')
-    #breakpoint()
     train_text = [x[1] for x in train_iter]
 
     vocab = build_vocab_from_iterator(map(tokenizer, train_text), specials=['<unk>'])
     vocab.set_default_index(vocab['<unk>'])
-    #print('vocab')
-    #breakpoint()
 
     text_pipeline = lambda x: vocab(tokenizer(x))
-    label_pipeline = lambda x: int(x) - 1
+    label_pipeline = lambda x: 0 if x == "neg" else 1
 
     def collate(batch):
         """DataLoader uses this to prep data."""
@@ -54,7 +50,6 @@ def get_data(batch_size:int) -> (DataLoader, DataLoader):
         offsets = torch.tensor(offsets[:-1]).cumsum(dim=0)
         text_list = torch.cat(text_list)
         return label_list.to(device), text_list.to(device), offsets.to(device)
-
 
     # train_iter was "consumed" by the process of building the vocab,
     # so we have to create it again
@@ -86,9 +81,14 @@ def save_model_params(params):
     parsed_params = [] # {'name','values'}
     for name, param in params:
         if param.requires_grad:
-            parsed = {'name':name,'values':param.tolist()}
+            dim1 = param.shape[0]
+            dim2 = param.shape[1] if len(param.shape) > 1 else 0
+            parsed = {'name':name,
+                      'dim1':dim1,
+                      'dim2':dim2,
+                      'values':param.tolist()}
             parsed_params.append(parsed)
-    field_names = ['name','values']
+    field_names = ['name','dim1','dim2','values']
     with open('init_params.csv','w') as f:
         writer = csv.DictWriter(f, fieldnames=field_names)
         writer.writeheader()
@@ -128,6 +128,7 @@ def init_results(model_dir_path: os.PathLike) -> None:
     return
 
 def train_loop(config: dict, model: tf.BinaryTransformer,
+                results: dict,
                 train: DataLoader, test: DataLoader,
                 model_dir_path: os.PathLike) -> None:
     """
@@ -152,10 +153,14 @@ def train_loop(config: dict, model: tf.BinaryTransformer,
 
         for j, batch in enumerate(train):
             batch.to(device)
+            breakpoint()
             target, x = batch
+            breakpoint()
             y = model(x)
+            breakpoint()
 
             batch_loss = lossfn(y, target)
+            breakpoint()
             loss += batch_loss
 
             batch_acc = torch.eq(y.round(), target)
@@ -193,9 +198,11 @@ def save_model(model: torch.nn.Module, path: os.PathLike) -> None:
 
     return
 
-def load_results(path: os.PathLike) -> dict:
+def load_results(model_dir_path: os.PathLike) -> dict:
+    path = os.path.join(model_dir_path, "results.yaml")
     try:
-        results = yaml.unsafe_load(path)
+        with open(path) as f:
+            results = yaml.unsafe_load(f)
     except Exception as e:
         print(f"Failed to load results from {path} with {e}")
         results = None
@@ -205,7 +212,7 @@ def load_results(path: os.PathLike) -> dict:
 
 def save_results(results: dict, path: os.PathLike) -> None:
     try:
-        with open(path,'r') as f:
+        with open(path,'w') as f:
             yaml.dump(results, f)
     except Exception as e:
         print(f"Failed to save new results to {results_path} with {e}")
@@ -232,13 +239,14 @@ def main():
     print("*** Done initializing model.\n")
 
     # path to saved model
-    model_dir_path = os.path.join("saved_models", config["save_as"])
+    model_dir_path = os.path.join("models", config["save_as"])
     model_path = os.path.join(model_dir_path, config["save_as"] + ".model")
 
     if not model_exists(model_dir_path, model_path):
         print(f"*** {model_dir_path} not found, creating new.\n")
         # init results folder if necessary
         init_model_folder(model_dir_path)
+        init_results(model_dir_path)
     else:
         # load state dict if present
         print(f"*** Loading model state dict from {model_dir_path}.")
