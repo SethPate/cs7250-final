@@ -10,7 +10,7 @@ import pandas as pd
 from scipy.special import softmax
 import pickle
 
-from .style import stylesheet
+from .style import stylesheet # specific to cytoscape
 
 WORDS_PER_ROW = 7 # at 800px width
 fake_data_path = "./data/fake_data.pickl"
@@ -152,6 +152,16 @@ def selectHelper(selections, mouseover, data):
 
     return data
 
+explain = dcc.Markdown('''
+    ## query, key, value attention
+
+    This is a demonstration and explanation of qkv attention.
+
+    ## multi head attention
+
+    And also a bit on how this works.
+    ''')
+
 def get_layout():
     """
     Construct the whole attention module, including the cytoscape element
@@ -188,7 +198,9 @@ def get_layout():
             paragraph,
             cyto_layout,
             html.P(id="span-holder",children=spans),
-            html.P(id="display",children=params['selected_word_ix'])
+            html.P(id="display",children=params['selected_word_ix']),
+            html.Hr(),
+            explain,
         ]
     )
 
