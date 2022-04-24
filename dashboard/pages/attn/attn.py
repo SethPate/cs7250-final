@@ -15,8 +15,9 @@ def get_elements(params):
 
     element_list = []
 
-    sample = params['sample'] # list of tokens
-    wordmap = get_wordmap(sample)
+    sample_ix = params['current_sample_ix']
+    words = params['layerdata'][sample_ix]['sample']
+    wordmap = get_wordmap(words)
     element_list += wordmap 
 
     return element_list
@@ -27,9 +28,10 @@ def get_spans(params):
     word opacity according to the attention value, relative to the selected word.
     """
 
+    sample_ix = params['current_sample_ix']
     selected_word_ix = params['selected_word_ix']
-    words = params['sample']
-    attn_weights = params['attention']
+    words = params['layerdata'][sample_ix]['sample']
+    attn_weights = params['layerdata'][sample_ix]['attention']
 
     if not selected_word_ix: # need not be selected
         attn = np.ones(len(words))
@@ -115,7 +117,7 @@ def get_layout(params):
     description = html.P("Mouse over words to see their attention value below. Click to select.")
 
     current_sample_ix = params['current_sample_ix']
-    words = params['sample']
+    words = params['layerdata'][current_sample_ix]['sample']
 
     paragraph = html.P(" ".join(words))
     

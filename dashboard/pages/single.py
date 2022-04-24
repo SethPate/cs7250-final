@@ -22,15 +22,16 @@ fake_data_path = "./data/fake_data.pickl"
 def get_dummy_data(params):
     """
     Called by view.py to supplement params.
+    Returns a list of samples.
+    Each sample has the following keys:
+        embedding, position, combined,
+        query, key, value, attention,
+        linear-1, linear-2, decoder
     """
-    sample_ix = params['current_sample_ix']
-
     with open(fake_data_path, 'rb') as f:
         fake_data = pickle.load(f)
 
-    sample_data = fake_data[sample_ix]
-
-    return sample_data 
+    return fake_data 
 
 def make_single_layout():
     """Pulls together all the content and structure pages."""
@@ -40,7 +41,7 @@ def make_single_layout():
         "current_sample_ix": 0,
         "selected_word_ix": 0,
     }
-    params.update(get_dummy_data(params))
+    params['layerdata'] = get_dummy_data(params)
 
     # make all the layouts and put em together
     loc = dcc.Location(id="url")
@@ -49,7 +50,7 @@ def make_single_layout():
         intro.make_layout(),
         embed.make_layout(),
         attn.get_layout(params),
-        ff.get_layout(),
+        ff.get_layout(params),
         decoder.get_layout(),
         ])
 

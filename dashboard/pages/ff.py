@@ -3,6 +3,7 @@ from dash import dcc
 import plotly.express as px
 from pages.maindash import app
 from dash.dependencies import Input,Output
+from utils.functions import matrix_fig
 
 explain = dcc.Markdown('''
     ## purpose of a feedforward layer
@@ -33,8 +34,7 @@ def get_layout(params):
 def make_ff_fig(params):
     ix = params['current_sample_ix']
     ff = params['layerdata'][ix]['linear_1'] # np.array(t,d)
-    fig = px.imshow(ff)
-    return dcc.Graph(figure=fig)
+    return matrix_fig(ff, "feedforward output")
 
 @app.callback(Output("ff-figure","children"),
             Input("datastore","data"))
