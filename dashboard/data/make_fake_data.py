@@ -1,4 +1,5 @@
 import pickle
+import math
 import numpy as np
 from scipy.special import softmax
 
@@ -24,13 +25,24 @@ layers = [
     'decoder'
     ]
 
+def make_pos_vectors(t,d):
+    """Borrowed from pytorch.org"""
+    position = np.expand_dims(np.arange(t),1)
+    div_term = np.exp(np.arange(0, d, 2) * (-math.log(10000.0) / d))
+    pe = np.zeros((t, 1, d))
+    pe[:, 0, 0::2] = np.sin(position * div_term)
+    pe[:, 0, 1::2] = np.cos(position * div_term)
+    pe = pe.squeeze(1)
+    return pe
+
 def sample_to_layers(s):
     sample = s.split(" ")
     t = len(sample) # number of tokens
     d = 128 # model hidden dimension
 
     embedding = np.random.normal(size=(t,d))
-    position = np.random.normal(size=(t,d))
+    #position = np.random.normal(size=(t,d))
+    position = make_pos_vectors(t,d)
     combined = embedding + position
 
     query = np.random.normal(size=(t,d))
