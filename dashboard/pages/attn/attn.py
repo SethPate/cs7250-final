@@ -5,28 +5,10 @@ from dash import dcc
 from dash.dependencies import Input,Output,State
 from pages.maindash import app
 import numpy as np
-import numpy as np
-import pandas as pd
-from scipy.special import softmax
-import pickle
 
 from .style import stylesheet # specific to cytoscape
 
 WORDS_PER_ROW = 7 # at 800px width
-fake_data_path = "./data/fake_data.pickl"
-
-def get_dummy_data(params):
-    """
-    Called by view.py to supplement params.
-    """
-    sample_ix = params['current_sample_ix']
-
-    with open(fake_data_path, 'rb') as f:
-        fake_data = pickle.load(f)
-
-    sample_data = fake_data[sample_ix]
-
-    return sample_data 
 
 def get_elements(params):
     """Makes nodes for the cytoscape."""
@@ -114,44 +96,6 @@ def get_cyto_layout(params, n_rows):
 
     return layout_cytoscape
 
-
-# Test case to show the selection reactively
-@app.callback(
-    Output("display","children"),
-    Input("explorer-view-store","data"))
-def displayer(data):
-    return data['selected_word_ix']
-
-"""
-When the data changes, regenerate the spans and their tooltips.
-"""
-@app.callback(
-    Output("span-holder","children"),
-    Input("explorer-view-store","data"))
-def span_update(params):
-    if not params:
-        return
-    new_spans, new_tooltips = get_spans(params)
-    return new_spans + new_tooltips
-
-"""
-Update the data to reflect a selected word from the cytoscape.
-"""
-@app.callback(
-    Output("explorer-view-store", "data"),
-    Input("attn-cyto", "selectedNodeData"),
-    Input("attn-cyto", "mouseoverNodeData"),
-    State("explorer-view-store", "data"))
-def selectHelper(selections, mouseover, data):
-    if selections:
-        data['selected_word_ix'] = selections[0]['ix']
-    elif mouseover:
-        data['selected_word_ix'] = mouseover['ix']
-    else:
-        data['selected_word_ix'] = None
-
-    return data
-
 explain = dcc.Markdown('''
     ## query, key, value attention
 
@@ -162,20 +106,13 @@ explain = dcc.Markdown('''
     And also a bit on how this works.
     ''')
 
-def get_layout():
+def get_layout(params):
     """
     Construct the whole attention module, including the cytoscape element
     at the center.
     """
 
-    params = {
-        "current_sample_ix": 0,
-        "selected_word_ix": 0,
-    }
-
     description = html.P("Mouse over words to see their attention value below. Click to select.")
-
-    params.update(get_dummy_data(params))
 
     current_sample_ix = params['current_sample_ix']
     words = params['sample']
@@ -190,7 +127,7 @@ def get_layout():
 
     layout = html.Div(
         [
-            dcc.Store(id="explorer-view-store", data=params),
+            dcc.Store(id="datastore", data=params),
             html.H1("Attention"),
             html.Hr(),
             description,
@@ -205,3 +142,12 @@ def get_layout():
     )
 
     return layout
+
+@app.callback(Output('span-holder','children'),
+            Input('datastore','data'))
+def span_update(data):
+    if not data:
+        return
+    else:
+        spans, tooltips = get_spans(data)
+        return spans + tooltips
