@@ -15,7 +15,6 @@ from .style import stylesheet
 WORDS_PER_ROW = 7 # at 800px width
 fake_data_path = "./data/fake_data.pickl"
 
-
 def get_dummy_data(params):
     """
     Called by view.py to supplement params.
@@ -30,6 +29,8 @@ def get_dummy_data(params):
     return sample_data 
 
 def get_elements(params):
+    """Makes nodes for the cytoscape."""
+
     element_list = []
 
     sample = params['sample'] # list of tokens
@@ -39,6 +40,11 @@ def get_elements(params):
     return element_list
 
 def get_spans(params):
+    """
+    Displayed below the cytoscape. Shows attention by modifying
+    word opacity according to the attention value, relative to the selected word.
+    """
+
     selected_word_ix = params['selected_word_ix']
     words = params['sample']
     attn_weights = params['attention']
@@ -69,6 +75,10 @@ def get_spans(params):
     return spans, tooltips
 
 def get_wordmap(words):
+    """
+    Nodes for the cytoscape. 'ix' refers to the word order in the sentence.
+    """
+
     elements = []
     for i, w in enumerate(words):
         word_node = {
@@ -130,23 +140,30 @@ Update the data to reflect a selected word from the cytoscape.
 @app.callback(
     Output("explorer-view-store", "data"),
     Input("attn-cyto", "selectedNodeData"),
+    Input("attn-cyto", "mouseoverNodeData"),
     State("explorer-view-store", "data"))
-def selectHelper(selection_list, data):
-    if not selection_list:
-        data['selected_word_ix'] = None
+def selectHelper(selections, mouseover, data):
+    if selections:
+        data['selected_word_ix'] = selections[0]['ix']
+    elif mouseover:
+        data['selected_word_ix'] = mouseover['ix']
     else:
-        data['selected_word_ix'] = selection_list[0]['ix']
+        data['selected_word_ix'] = None
+
     return data
 
 def get_layout():
+    """
+    Construct the whole attention module, including the cytoscape element
+    at the center.
+    """
+
     params = {
         "current_sample_ix": 0,
         "selected_word_ix": 0,
-        "current_head": 0,
-        "n_heads": 4
     }
 
-    description = html.P("The world of attention sure is interesting.")
+    description = html.P("Mouse over words to see their attention value below. Click to select.")
 
     params.update(get_dummy_data(params))
 
