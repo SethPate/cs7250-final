@@ -4,10 +4,19 @@ from dash.dependencies import Input
 from dash.dependencies import Output
 from dash.dependencies import State
 
-from .data import get_node_dicts
+# selection from attention nodes
+@app.callback(
+    Output("explorer-view-store", "data"),
+    Input("attn-cyto", "selectedNodeData"),
+    State("explorer-view-store", "data"))
+def selectHelper(selection_list, data):
+    if not selection_list:
+        data['selected_word_ix'] = None
+    else:
+        data['selected_word_ix'] = selection_list[0]['ix']
+    return data
 
-
-# from dash.exceptions import PreventUpdate
+"""
 @app.callback(
     Output("explorer-view-store", "data"),
     Input("button-word-up", "n_clicks"),
@@ -70,15 +79,7 @@ def update_explorer_view_store(
         if cytoscape_params["current_head"] < cytoscape_params["n_heads"] - 1:
             cytoscape_params["current_head"] += 1
     return cytoscape_params
-
-
-@app.callback(
-    Output("explorer-view-cytoscape", "elements"),
-    Input("explorer-view-store", "data"),
-)
-def update_elements(cytoscape_params):
-    return get_node_dicts(cytoscape_params)
-
+"""
 
 @app.callback(
     Output("text-id-sample", "children"),

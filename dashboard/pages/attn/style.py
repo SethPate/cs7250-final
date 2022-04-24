@@ -30,39 +30,10 @@ stylesheet = [
         },
     },
     {
-        "selector": ".edge-attention",
-        "style": {
-            "width": "data(weight)",
-            "lineColor": "black",
-            # "target-arrow-shape": "vee",
-            "curve-style": "bezier",
-            'source-endpoint': '50% 0',
-            'target-endpoint': '-50% 0'
-            # "arrow-scale": "data(weight)*5",
-        },
-    },
-    {
-        "selector": ".node-header",
-        "style": {
-            "background-color": "white",
-            "border-width": "0px",
-            "font-size": "20px",
-            "fontWeight": "bold",
-        },
-    },
-    {
         "selector": "node:selected",
         "style": {
-            "background-color": "yellow",
-        },
-    },
-    {
-        "selector": ".node-output",
-        "style": {
-            "background-color": "data(color)",
-            "border-width": "1px",
-            "width": "10px",
-            "height": "9px",
+            "background-color": "#5e2390",
+            "background-opacity": ".7",
         },
     },
     {

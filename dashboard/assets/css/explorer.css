@@ -3,6 +3,14 @@
     border-style:solid;
 }
 
+selected {
+	color: red;
+}
+
+.attn-text{
+	opacity: 50%;
+}
+
 .header-text{
     font-weight: bold;
     margin-bottom: 0;

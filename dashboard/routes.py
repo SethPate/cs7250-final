@@ -4,13 +4,13 @@ from dash.dependencies import Input
 from dash.dependencies import Output
 
 from app import app
-from pages.explorer import view as view_explorer
+from pages.explorer import attn as attn_layer
 
 
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
 def render_page_content(pathname):
     if pathname == "/":
-        return view_explorer.layout
+        return attn_layer.get_layout()
     #elif pathname == gdp_page_location:
     #    return gdp.layout
     #elif pathname == iris_page_location:
