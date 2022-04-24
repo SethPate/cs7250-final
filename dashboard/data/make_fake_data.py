@@ -29,21 +29,21 @@ def sample_to_layers(s):
     t = len(sample) # number of tokens
     d = 128 # model hidden dimension
 
-    embedding = np.random.random((t,d))
-    position = np.random.random((t,d))
+    embedding = np.random.normal(size=(t,d))
+    position = np.random.normal(size=(t,d))
     combined = embedding + position
 
-    query = np.random.random((t,d))
-    key = np.random.random((t,d))
-    value = np.random.random((t,d))
+    query = np.random.normal(size=(t,d))
+    key = np.random.normal(size=(t,d))
+    value = np.random.normal(size=(t,d))
 
-    attention = np.random.random((t,t))
+    attention = np.random.normal(size=(t,t))
     attention *= 50 # make softmax less uniform
     attention = softmax(attention, axis=1)
 
-    linear_1 = np.random.random((t,d))
-    linear_2 = np.random.random((t,d))
-    decoder = np.random.random(1)
+    linear_1 = np.random.normal(size=(t,d))
+    linear_2 = np.random.normal(size=(t,d))
+    decoder = np.random.normal(size=1)
 
     l = {
         'sample' : sample, # list of words
