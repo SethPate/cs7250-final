@@ -2,59 +2,53 @@ import dash_cytoscape as cyto
 import dash_bootstrap_components as dbc
 from dash import html
 from dash import dcc
-from dash.dependencies import Input,Output
-from app import app
+from dash.dependencies import Input,Output,State
+from pages.maindash import app
 import numpy as np
 import numpy as np
 import pandas as pd
 from scipy.special import softmax
+import pickle
 
 from .style import stylesheet
 
 WORDS_PER_ROW = 7 # at 800px width
+fake_data_path = "./data/fake_data.pickl"
 
 
 def get_dummy_data(params):
     """
     Called by view.py to supplement params.
     """
-    raw_sentences = [
-        "I went and saw this movie last night after being coaxed to by a few friends of mine. I'll admit that I was reluctant to see it because from what I knew of Ashton Kutcher he was only able to do comedy.",
-        "I think this is one of those few movies that I want to rate it as low as possible just to pay it a compliment.",
-    ]
-    sentences = [sentence.split(" ") for sentence in raw_sentences]
-    attn_weights = [softmax(np.random.random((len(s),len(s))) * 50, axis=1)
-                    for s in sentences]
-    dummy_data = {
-        "raw_sentences": raw_sentences,
-        "sentences": sentences,
-        "attn_weights": attn_weights,
-    }
-    return dummy_data
+    sample_ix = params['current_sample_ix']
+
+    with open(fake_data_path, 'rb') as f:
+        fake_data = pickle.load(f)
+
+    sample_data = fake_data[sample_ix]
+
+    return sample_data 
 
 def get_elements(params):
     element_list = []
-    current_sample_ix = params['current_sample_ix']
 
-    words = params["sentences"][current_sample_ix]
-    wordmap = get_wordmap(words)
+    sample = params['sample'] # list of tokens
+    wordmap = get_wordmap(sample)
     element_list += wordmap 
 
     return element_list
 
 def get_spans(params):
-    sentence_ix = params['current_sample_ix']
     selected_word_ix = params['selected_word_ix']
-
-    sentence = params['sentences'][sentence_ix]
-    attn_weights = params['attn_weights'][sentence_ix]
+    words = params['sample']
+    attn_weights = params['attention']
 
     if not selected_word_ix: # need not be selected
-        attn = np.ones(len(sentence))
+        attn = np.ones(len(words))
     else:
         attn = [attn_weights[selected_word_ix][i] \
             if i != selected_word_ix else 1. \
-            for i in range(len(sentence))]
+            for i in range(len(words))]
 
     # set minimum opacity
     opacity = np.array(attn)
@@ -62,8 +56,8 @@ def get_spans(params):
 
     spans = []
     tooltips = []
-    for i,s in enumerate(sentence):
-        display = s + " "
+    for i,w in enumerate(words):
+        display = w + " "
         o = opacity[i]
         _id = f"span_{i}"
         span = html.Span(display, id=_id, className='attn-text', style={'opacity':o})
@@ -111,13 +105,16 @@ def get_cyto_layout(params, n_rows):
     return layout_cytoscape
 
 
-# re-render?
+# Test case to show the selection reactively
 @app.callback(
     Output("display","children"),
     Input("explorer-view-store","data"))
 def displayer(data):
     return data['selected_word_ix']
 
+"""
+When the data changes, regenerate the spans and their tooltips.
+"""
 @app.callback(
     Output("span-holder","children"),
     Input("explorer-view-store","data"))
@@ -127,6 +124,20 @@ def span_update(params):
     new_spans, new_tooltips = get_spans(params)
     return new_spans + new_tooltips
 
+"""
+Update the data to reflect a selected word from the cytoscape.
+"""
+@app.callback(
+    Output("explorer-view-store", "data"),
+    Input("attn-cyto", "selectedNodeData"),
+    State("explorer-view-store", "data"))
+def selectHelper(selection_list, data):
+    if not selection_list:
+        data['selected_word_ix'] = None
+    else:
+        data['selected_word_ix'] = selection_list[0]['ix']
+    return data
+
 def get_layout():
     params = {
         "current_sample_ix": 0,
@@ -134,14 +145,17 @@ def get_layout():
         "current_head": 0,
         "n_heads": 4
     }
+
+    description = html.P("The world of attention sure is interesting.")
+
     params.update(get_dummy_data(params))
 
     current_sample_ix = params['current_sample_ix']
-    sentence = params['sentences'][current_sample_ix]
+    words = params['sample']
 
-    paragraph = html.P(" ".join(sentence))
+    paragraph = html.P(" ".join(words))
     
-    rows = len(sentence) // WORDS_PER_ROW
+    rows = len(words) // WORDS_PER_ROW
     cyto_layout = get_cyto_layout(params, n_rows=rows)
 
     spans, tooltips = get_spans(params)
@@ -151,6 +165,9 @@ def get_layout():
         [
             dcc.Store(id="explorer-view-store", data=params),
             html.H1("Attention"),
+            html.Hr(),
+            description,
+            html.Hr(),
             paragraph,
             cyto_layout,
             html.P(id="span-holder",children=spans),
