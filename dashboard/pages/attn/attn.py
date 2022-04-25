@@ -161,9 +161,11 @@ def get_layout(params):
             html.Div(dcc.Graph(id="q")),
             html.Div(dcc.Graph(id="k")),
             html.Div(dcc.Graph(id="v")),
-            dcc.Markdown("""
+            dcc.Markdown(
+                """
                 raw qk
-                """),
+                """
+            ),
             html.Div(dcc.Graph(id="qk")),
             dcc.Markdown(
                 """
@@ -182,7 +184,7 @@ def get_layout(params):
             # paragraph,
             cyto_layout,
             html.P(id="span-holder", children=spans),
-            #html.P(id="display", children=params["selected_word_ix"]),
+            # html.P(id="display", children=params["selected_word_ix"]),
             html.Hr(),
             dcc.Markdown(
                 """
@@ -213,12 +215,13 @@ def update_q(params):
     elif params["update_figs"] is False:
         raise dash.exceptions.PreventUpdate
     else:
-        ix = params['current_sample_ix']
-        layerdata = params['layerdata'][ix]
-        sample = layerdata['sample']
-        q = layerdata['query']
-        qfig = matrix_fig(q[:5],'queries',ylabels=sample[:5])
+        ix = params["current_sample_ix"]
+        layerdata = params["layerdata"][ix]
+        sample = layerdata["sample"]
+        q = layerdata["query"]
+        qfig = matrix_fig(q[:5], "queries", ylabels=sample[:5])
         return qfig
+
 
 @app.callback(Output("k", "figure"), Input("datastore", "data"))
 def update_k(params):
@@ -227,12 +230,13 @@ def update_k(params):
     elif params["update_figs"] is False:
         raise dash.exceptions.PreventUpdate
     else:
-        ix = params['current_sample_ix']
-        layerdata = params['layerdata'][ix]
-        sample = layerdata['sample']
-        k = layerdata['key']
-        kfig = matrix_fig(k[:5],'keys',ylabels=sample[:5])
+        ix = params["current_sample_ix"]
+        layerdata = params["layerdata"][ix]
+        sample = layerdata["sample"]
+        k = layerdata["key"]
+        kfig = matrix_fig(k[:5], "keys", ylabels=sample[:5])
         return kfig
+
 
 @app.callback(Output("v", "figure"), Input("datastore", "data"))
 def update_v(params):
@@ -241,11 +245,11 @@ def update_v(params):
     elif params["update_figs"] is False:
         raise dash.exceptions.PreventUpdate
     else:
-        ix = params['current_sample_ix']
-        layerdata = params['layerdata'][ix]
-        sample = layerdata['sample']
-        v = layerdata['value']
-        vfig = matrix_fig(v[:5],'values',ylabels=sample[:5])
+        ix = params["current_sample_ix"]
+        layerdata = params["layerdata"][ix]
+        sample = layerdata["sample"]
+        v = layerdata["value"]
+        vfig = matrix_fig(v[:5], "values", ylabels=sample[:5])
         return vfig
 
 

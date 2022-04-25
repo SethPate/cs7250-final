@@ -55,7 +55,7 @@ def make_single_layout():
 
     # make all the layouts and put em together
     loc = dcc.Location(id="url")
-    sb = sidebar.sidebar_layout
+    sb = sidebar.get_sidebar(params)
     content = html.Div(
         [
             intro.make_layout(params),
