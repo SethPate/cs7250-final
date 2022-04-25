@@ -2,7 +2,6 @@ import plotly.express as px
 from dash import dcc
 from dash import html
 
-
 def update_fig(params, key, title):
     ix = params["current_sample_ix"]
     data = params["layerdata"][ix][key]  # np.array(t,d)
