@@ -37,7 +37,6 @@ def get_dummy_data(params):
     """
     with open(fake_data_path, "rb") as f:
         fake_data = pickle.load(f)
-        print(len(fake_data[0]["sample"]))
 
     return fake_data
 

@@ -43,5 +43,4 @@ def update_sample(params):
     else:
         ix = params["current_sample_ix"]
         sample = params["layerdata"][ix]["sample"]
-        print(sample)
         return html.P(" ".join(sample))
