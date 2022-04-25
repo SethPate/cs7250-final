@@ -4,7 +4,7 @@ from dash.dependencies import Input
 from dash.dependencies import Output
 from dash.dependencies import State
 from maindash import app
-
+import dash
 
 def make_dropdown(params):
     ix = params["current_sample_ix"]
@@ -12,7 +12,7 @@ def make_dropdown(params):
     sample_ids = [f"Sample {i+1}" for i in samples]
     return html.Div(
         [
-            dcc.Dropdown(sample_ids, sample_ids[ix], id="dropdown-samples"),
+            dcc.Dropdown(sample_ids, sample_ids[0], id="dropdown-samples"),
         ],
     )
 
@@ -53,6 +53,8 @@ def make_layout(params):
 def update_sample(params):
     if not params:
         return
+    elif params["update_figs"] is False:
+        raise dash.exceptions.PreventUpdate
     else:
         ix = params["current_sample_ix"]
         sample = params["layerdata"][ix]["sample"]

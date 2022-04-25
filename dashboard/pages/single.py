@@ -89,6 +89,7 @@ Update the data to reflect a selected word from the cytoscape.
 )
 def selectHelper(selections, mouseover, dropdown_value, data):
     sample = int(dropdown_value.split(" ")[-1]) - 1
+    print(sample)
     if sample != data["current_sample_ix"]:
         data["current_sample_ix"] = sample
         data["update_figs"] = True
