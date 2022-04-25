@@ -140,25 +140,25 @@ def get_layout(params):
                 ## query, key, and value
                 """
             ),
-            html.Div(id="qkv"),
+            html.Div(dcc.Graph(id="qkv")),
             dcc.Markdown(
                 """
                 ## raw qk
                 """
             ),
-            html.Div(id="qk"),
+            html.Div(dcc.Graph(id="qk")),
             dcc.Markdown(
                 """
                 ## scaled qk
                 """
             ),
-            html.Div(id="scaled"),
+            html.Div(dcc.Graph(id="scaled")),
             dcc.Markdown(
                 """
                 ## attention
                 """
             ),
-            html.Div(id="attention"),
+            html.Div(dcc.Graph(id="attention")),
             html.Hr(),
             description,
             # paragraph,
@@ -171,7 +171,7 @@ def get_layout(params):
                 ## value
                 """
             ),
-            html.Div(id="attn-value"),
+            html.Div(dcc.Graph(id="attn-value")),
         ]
     )
 
@@ -186,18 +186,17 @@ def update_cyto(params):
         return get_elements(params)
 
 
-@app.callback(Output("qkv", "children"), Input("datastore", "data"))
+@app.callback(Output("qkv", "figure"), Input("datastore", "data"))
 def update_qkv(params):
     if not params:
         return
     elif params["update_figs"] is False:
         raise dash.exceptions.PreventUpdate
     else:
-        return
-        # return update_fig(params, 'linear', "query, key, value")
+        return update_fig(params, "linear", "query, key, value")
 
 
-@app.callback(Output("qk", "children"), Input("datastore", "data"))
+@app.callback(Output("qk", "figure"), Input("datastore", "data"))
 def update_qk(params):
     if not params:
         return
@@ -207,7 +206,7 @@ def update_qk(params):
         return update_fig(params, "qk", "query * key")
 
 
-@app.callback(Output("scaled", "children"), Input("datastore", "data"))
+@app.callback(Output("scaled", "figure"), Input("datastore", "data"))
 def update_scaled(params):
     if not params:
         return
@@ -217,7 +216,7 @@ def update_scaled(params):
         return update_fig(params, "scaled", "scaled")
 
 
-@app.callback(Output("attention", "children"), Input("datastore", "data"))
+@app.callback(Output("attention", "figure"), Input("datastore", "data"))
 def update_attention(params):
     if not params:
         return
@@ -227,7 +226,7 @@ def update_attention(params):
         return update_fig(params, "attention", "attention")
 
 
-@app.callback(Output("attn-value", "children"), Input("datastore", "data"))
+@app.callback(Output("attn-value", "figure"), Input("datastore", "data"))
 def update_attn_value(params):
     if not params:
         return

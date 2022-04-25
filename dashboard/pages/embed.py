@@ -1,8 +1,12 @@
 import dash
-from dash import dcc, html
-from dash.dependencies import Input,Output,State
+from dash import dcc
+from dash import html
+from dash.dependencies import Input
+from dash.dependencies import Output
+from dash.dependencies import State
 from maindash import app
-from utils.functions import matrix_fig, update_fig
+from utils.functions import matrix_fig
+from utils.functions import update_fig
 
 """
 Section for how embeddings work.
@@ -23,8 +27,10 @@ md = [
     into a bunch of numbers.
 
     Here's how it looks for the first few words of our movie review:
-    """),
-    dcc.Markdown("""
+    """
+    ),
+    dcc.Markdown(
+        """
     When you choose a word, you are looking up its value in a dictionary
     called an **embedding layer**. In this case, the embedding layer
     simply assigns each word a set of 128 random floating point values,
@@ -83,10 +89,11 @@ def make_layout(params):
     embed = layerdata["embedding"]
     pos = layerdata["position"]
     combo = embed + pos
-
-    embed_fig = matrix_fig(embed[:5], "word embeddings", ylabels=sample[:5])
-    embed_fig2 = update_fig(params, 'embedding', 'word embeddings')
-    pos_fig = matrix_fig(pos,"position embeddings")
+    embed_fig = matrix_fig(
+        embed[:5], "word embeddings", key="embedding", ylabels=sample[:5]
+    )
+    embed_fig2 = update_fig(params, "embedding", "word embeddings")
+    pos_fig = matrix_fig(pos, "position embeddings")
     combo_fig = matrix_fig(combo[:5], "word + position", ylabels=sample[:5])
 
     layout = html.Div(
@@ -94,19 +101,20 @@ def make_layout(params):
             html.H1("Embeddings"),
             html.Hr(),
             md[0],  # markdown
-            html.Div(id='embed_fig'),
+            html.Div(dcc.Graph(id="embed_fig")),
             md[1],
-            html.Div(id='embed_fig2'),
+            html.Div(dcc.Graph(id="embed_fig2")),
             md[2],
-            html.Div(id='pos_fig'),
+            html.Div(dcc.Graph(id="pos_fig")),
             md[3],
-            html.Div(id='combo_fig'),
+            html.Div(dcc.Graph(id="combo_fig")),
         ]
     )
 
     return layout
 
-@app.callback(Output("embed_fig", "children"), Input("datastore", "data"))
+
+@app.callback(Output("embed_fig", "figure"), Input("datastore", "data"))
 def update_embed_fig(params):
     if not params:
         return
@@ -116,7 +124,7 @@ def update_embed_fig(params):
         return update_fig(params, "embedding", "embed")
 
 
-@app.callback(Output("embed_fig2", "children"), Input("datastore", "data"))
+@app.callback(Output("embed_fig2", "figure"), Input("datastore", "data"))
 def update_embed_fig2(params):
     if not params:
         return
@@ -126,7 +134,7 @@ def update_embed_fig2(params):
         return update_fig(params, "embedding", "embed2")
 
 
-@app.callback(Output("pos_fig", "children"), Input("datastore", "data"))
+@app.callback(Output("pos_fig", "figure"), Input("datastore", "data"))
 def update_pos(params):
     if not params:
         return
@@ -135,7 +143,8 @@ def update_pos(params):
     else:
         return update_fig(params, "position", "position")
 
-@app.callback(Output("combo_fig", "children"), Input("datastore", "data"))
+
+@app.callback(Output("combo_fig", "figure"), Input("datastore", "data"))
 def update_combo(params):
     if not params:
         return
