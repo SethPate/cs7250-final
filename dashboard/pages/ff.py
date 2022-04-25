@@ -1,8 +1,9 @@
-from dash import html
-from dash import dcc
 import plotly.express as px
+from dash import dcc
+from dash import html
+from dash.dependencies import Input
+from dash.dependencies import Output
 from maindash import app
-from dash.dependencies import Input,Output
 from utils.functions import matrix_fig
 
 def get_layout(params):

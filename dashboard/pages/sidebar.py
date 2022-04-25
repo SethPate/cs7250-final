@@ -1,7 +1,10 @@
 import dash_bootstrap_components as dbc
-from dash.dependencies import Input, Output, State
 from dash import html
+from dash.dependencies import Input
+from dash.dependencies import Output
+from dash.dependencies import State
 from maindash import app
+
 
 @app.callback(
     Output("sidebar", "className"),
@@ -13,6 +16,7 @@ def toggle_classname(n, classname):
         return "collapsed"
     return ""
 
+
 @app.callback(
     Output("collapse", "is_open"),
     [Input("navbar-toggle", "n_clicks")],
@@ -22,6 +26,7 @@ def toggle_collapse(n, is_open):
     if n:
         return not is_open
     return is_open
+
 
 # we use the Row and Col components to construct the sidebar header
 # it consists of a title, and a toggle, the latter is hidden on large screens
@@ -83,7 +88,7 @@ sidebar_layout = html.Div(
             dbc.Nav(
                 [
                     dbc.NavLink("Home", href="/", active="exact"),
-                    dbc.NavLink("FF", href="#ff-section", active="exact"),
+                    dbc.NavLink(html.A("FF", href="#ff-section"), active="exact"),
                 ],
                 vertical=True,
                 pills=True,
