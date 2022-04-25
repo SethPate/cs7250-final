@@ -47,7 +47,7 @@ def make_single_layout():
 
     # init params and grab data
     params = {
-        "current_sample_ix": 0,
+        "current_sample_ix": -1,
         "selected_word_ix": 0,
     }
     params["update_figs"] = True
@@ -94,7 +94,7 @@ def selectHelper(selections, mouseover, dropdown_value, data):
         data["current_sample_ix"] = sample
         data["update_figs"] = True
     else:
-        data["update_figs"] = True
+        data["update_figs"] = False
     if selections:
         data["selected_word_ix"] = selections[0]["ix"]
     elif mouseover:

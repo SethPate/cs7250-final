@@ -39,7 +39,7 @@ def get_layout(params):
 
         """
             ),
-            html.Div(id="norm"),
+            html.Div(dcc.Graph(id="norm")),
         ]
     )
     return layout
