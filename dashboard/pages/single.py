@@ -1,11 +1,8 @@
 import pickle
 
 import dash_bootstrap_components as dbc
-from dash import dcc
-from dash import html
-from dash.dependencies import Input
-from dash.dependencies import Output
-from dash.dependencies import State
+from dash import dcc, html
+from dash.dependencies import Input, Output, State
 from maindash import app
 from scipy.special import softmax
 
@@ -79,7 +76,6 @@ def displayer(data):
 """
 Update the data to reflect a selected word from the cytoscape.
 """
-
 
 @app.callback(
     Output("datastore", "data"),
