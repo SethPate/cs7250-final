@@ -67,7 +67,7 @@ def sample_to_layers(s):
     norm = relu - relu.mean(axis=0)
     norm /= norm.std(axis=0)
 
-    decoder = np.random.normal(size=1)
+    decoder = np.random.normal(size=(1,1))
     final = 1 / (1 + np.exp(-1 * decoder))
 
     l = {
