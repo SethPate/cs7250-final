@@ -88,7 +88,7 @@ sidebar_layout = html.Div(
             dbc.Nav(
                 [
                     dbc.NavLink("Intro", href="/", active="exact"),
-                    dbc.NavLink(html.A("Embeddings", href="#ff-section"), active="exact"),
+                    dbc.NavLink(html.A("Embeddings", href="#embed-section"), active="exact"),
                     dbc.NavLink(html.A("Attention", href="#attn-section"), active="exact"),
                     dbc.NavLink(html.A("Nonlinearity", href="#nln-section"), active="exact"),
                     dbc.NavLink(html.A("Decoder", href="#decoder-section"), active="exact"),
