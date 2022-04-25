@@ -58,7 +58,8 @@ def make_single_layout():
     content = html.Div(
         [
             intro.make_layout(params),
-            embed.make_layout(params),
+            html.Div(embed.make_layout(params),
+                id='embed-section'),
             attn.get_layout(params),
             nln.get_layout(params),
             decoder.get_layout(),
@@ -103,3 +104,11 @@ def selectHelper(selections, mouseover, dropdown_value, data):
         data["selected_word_ix"] = None
 
     return data
+
+@app.callback(Output("embed-section","children"),
+        Input("datastore","data"))
+def update_embed(params):
+    if not params:
+        return
+    else:
+        return embed.make_layout(params)
