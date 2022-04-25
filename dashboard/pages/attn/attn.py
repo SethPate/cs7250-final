@@ -158,12 +158,12 @@ def get_layout(params):
                 Here's what they look like for a few of the words in our sample.
                 """
             ),
-            html.Div(dcc.Graph(id="qkv")),
-            dcc.Markdown(
-                """
-                ## raw qk
-                """
-            ),
+            html.Div(dcc.Graph(id="q")),
+            html.Div(dcc.Graph(id="k")),
+            html.Div(dcc.Graph(id="v")),
+            dcc.Markdown("""
+                raw qk
+                """),
             html.Div(dcc.Graph(id="qk")),
             dcc.Markdown(
                 """
@@ -204,8 +204,8 @@ def update_cyto(params):
         return get_elements(params)
 
 
-@app.callback(Output("qkv", "figure"), Input("datastore", "data"))
-def update_qkv(params):
+@app.callback(Output("q", "figure"), Input("datastore", "data"))
+def update_q(params):
     if not params:
         return
     elif params["update_figs"] is False:
@@ -215,13 +215,36 @@ def update_qkv(params):
         layerdata = params['layerdata'][ix]
         sample = layerdata['sample']
         q = layerdata['query']
+        qfig = matrix_fig(q[:5],'queries',ylabels=sample[:5])
+        return qfig
+
+@app.callback(Output("k", "figure"), Input("datastore", "data"))
+def update_k(params):
+    if not params:
+        return
+    elif params["update_figs"] is False:
+        raise dash.exceptions.PreventUpdate
+    else:
+        ix = params['current_sample_ix']
+        layerdata = params['layerdata'][ix]
+        sample = layerdata['sample']
         k = layerdata['key']
+        kfig = matrix_fig(k[:5],'keys',ylabels=sample[:5])
+        return kfig
+
+@app.callback(Output("v", "figure"), Input("datastore", "data"))
+def update_v(params):
+    if not params:
+        return
+    elif params["update_figs"] is False:
+        raise dash.exceptions.PreventUpdate
+    else:
+        ix = params['current_sample_ix']
+        layerdata = params['layerdata'][ix]
+        sample = layerdata['sample']
         v = layerdata['value']
-        qfig = matrix_fig(q[:5],'queries',sample[:5])
-        kfig = matrix_fig(k[:5],'keys',sample[:5])
-        vfig = matrix_fig(v[:5],'values',sample[:5])
-        return html.Div([
-            qfig,kfig,vfig])
+        vfig = matrix_fig(v[:5],'values',ylabels=sample[:5])
+        return vfig
 
 
 @app.callback(Output("qk", "figure"), Input("datastore", "data"))
