@@ -1,3 +1,4 @@
+import dash
 from dash import dcc, html
 from dash.dependencies import Input,Output,State
 from maindash import app
@@ -141,4 +142,4 @@ def update_combo(params):
     elif params["update_figs"] is False:
         raise dash.exceptions.PreventUpdate
     else:
-        return update_fig(params, "combo", "words + position")
+        return update_fig(params, "combined", "words + position")
