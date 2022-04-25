@@ -21,7 +21,7 @@ explain = dcc.Markdown('''
 
 def get_layout():
     return html.Div([
-        html.H1("Decoder"),
+        html.H1("Decoder",id='decoder-section'),
         html.Hr(),
         explain,
     ])

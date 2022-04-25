@@ -78,7 +78,7 @@ def make_layout(params):
         ylabels=sample[:5])
 
     layout = html.Div([
-        html.H1("Embeddings"),
+        html.H1("Embeddings",id='embed-section'),
         html.Hr(),
         md[0], # markdown
         embed_fig,

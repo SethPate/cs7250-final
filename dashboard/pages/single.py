@@ -12,7 +12,7 @@ from scipy.special import softmax
 
 from . import decoder
 from . import embed
-from . import ff
+from . import nln
 from . import intro
 from . import sidebar
 from .attn import attn
@@ -60,7 +60,7 @@ def make_single_layout():
             intro.make_layout(params),
             embed.make_layout(params),
             attn.get_layout(params),
-            ff.get_layout(params),
+            nln.get_layout(params),
             decoder.get_layout(),
         ],
         id="page-content",

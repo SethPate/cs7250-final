@@ -134,7 +134,7 @@ def get_layout(params):
     layout = html.Div(
         [
             dcc.Store(id="datastore", data=params),
-            html.H1("Attention"),
+            html.H1("Attention",id='attn-section'),
             html.Hr(),
             description,
             html.Hr(),
