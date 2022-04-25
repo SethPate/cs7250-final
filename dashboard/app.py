@@ -1,33 +1,11 @@
 import dash
+from dash import dcc
+from dash import html
 import dash_bootstrap_components as dbc
 
-from flask_caching import Cache
+from maindash import app
+from pages.single import make_single_layout
 
-from utils.external_assets import FONT_AWESOME
-from layout.layout import layout
-
-import flask
-
-
-server = flask.Flask(__name__)  # define flask app.server
-
-app = dash.Dash(
-    __name__,
-    server=server,
-    suppress_callback_exceptions=True,
-    external_stylesheets=[
-        dbc.themes.BOOTSTRAP,
-        FONT_AWESOME,
-    ],
-    meta_tags=[
-        #    {"name": "viewport", "content": "width=device-width, initial-scale=1"}
-    ],
-)
-
-cache = Cache(
-    app.server, config={"CACHE_TYPE": "filesystem", "CACHE_DIR": "cache-directory"}
-)
-
-app.layout = layout
-
-server = app.server
+if __name__ == "__main__":
+    app.layout = make_single_layout()
+    app.run_server(debug=True)
