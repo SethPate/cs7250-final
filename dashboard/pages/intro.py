@@ -1,31 +1,28 @@
-from dash import dcc
-from dash import html
-
-explain = dcc.Markdown(
-    """
-    Transformers are cool and they are used in a lot of places.
-
-    They can do this and that. Here are some famous transformers.
-
-    They have cool results in log-linear charts.
-
-    Here is what we are going to do -- we are going to classify movie
-    reviews.
-
-    This is the sample we have right now. You can change it if you want,
-    and the rest of this page will update to show the new data.
-"""
-)
-
+from dash import dcc, html
+from dash.dependencies import Input,Output,State
+from maindash import app
 
 def make_layout(params):
-    ix = params["current_sample_ix"]
-    sample = params["layerdata"][ix]["sample"]
 
     return html.Div(
         [
-            explain,
-            html.P(" ".join(sample)),
+            dcc.Markdown('''
+            Transformer networks are the basic technology powering many
+            new AI products, including:
+            * [Google Pathways Language Model](https://ai.googleblog.com/2022/04/pathways-language-model-palm-scaling-to.html), which explain bad jokes about TPU 'pods',
+            * arst
+            '''),
+            html.Div(id='show-sample'),
         ],
         id="home",
     )
+
+@app.callback(Output("show-sample","children"),
+        Input("datastore","data"))
+def update_sample(params):
+    if not params:
+        return
+    else:
+        ix = params["current_sample_ix"]
+        sample = params["layerdata"][ix]["sample"]
+        return html.P(sample)
