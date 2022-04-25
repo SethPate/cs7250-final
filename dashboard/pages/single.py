@@ -1,7 +1,6 @@
 import pickle
 
 import dash_bootstrap_components as dbc
-import numpy as np
 from dash import dcc
 from dash import html
 from dash.dependencies import Input

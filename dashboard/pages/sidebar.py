@@ -87,7 +87,7 @@ sidebar_layout = html.Div(
         dbc.Collapse(
             dbc.Nav(
                 [
-                    dbc.NavLink("Home", href="/", active="exact"),
+                    dbc.NavLink(html.A("Home", href="#home"), active="exact"),
                     dbc.NavLink(html.A("FF", href="#ff-section"), active="exact"),
                 ],
                 vertical=True,
