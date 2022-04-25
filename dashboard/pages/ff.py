@@ -17,33 +17,49 @@ def get_layout(params):
         - show unbalanced 'before' transformation
         - show unbalanced 'after' transformation
         '''),
-        html.Div(id='after-linear'),
+        html.Div(id='linear'),
         dcc.Markdown('''
         ## residual connections
         - show two layers normally
         - show three layers residually
         '''),
+        html.Div(id='relu'),
         dcc.Markdown('''
         ## layer norm
 
         Transform the outputs of a certain layer to mean 0 and std 1.
         Layer normalization is an alternative to batch normalization.
 
-        - show 'after'
-        - show post batch norm
-        - show post layer norm
-        ''')
+        '''),
+        html.Div(id='norm'),
         ])
     return layout
 
+def update_fig(params, key, title):
+    ix = params['current_sample_ix']
+    data = params['layerdata'][ix][key] # np.array(t,d)
+    return matrix_fig(data, title)
 
-
-@app.callback(Output("after-linear","children"),
+@app.callback(Output("linear","children"),
             Input("datastore","data"))
-def update_after_linear(params):
+def update_linear(params):
     if not params:
         return
     else:
-        ix = params['current_sample_ix']
-        linear = params['layerdata'][ix]['linear'] # np.array(t,d)
-        return matrix_fig(linear, "feedforward output")
+        return update_fig(params, 'linear', "linear")
+
+@app.callback(Output("relu","children"),
+            Input("datastore","data"))
+def update_relu(params):
+    if not params:
+        return
+    else:
+        return update_fig(params, "relu", "ReLU")
+
+@app.callback(Output("norm", "children"),
+            Input("datastore","data"))
+def update_norm(params):
+    if not params:
+        return
+    else:
+        return update_fig(params, "norm", "normalized")

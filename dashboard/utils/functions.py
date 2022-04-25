@@ -1,5 +1,5 @@
 import numpy as np
-from dash import dcc
+from dash import dcc, html
 import plotly.express as px
 
 def matrix_fig(matrix, title, ylabels=None):
@@ -22,4 +22,5 @@ def matrix_fig(matrix, title, ylabels=None):
         config={'displaylogo':False},
         responsive=True,
         )
-    return graph 
+    div = html.Div(graph)
+    return div 
