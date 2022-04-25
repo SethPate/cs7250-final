@@ -5,10 +5,10 @@ from dash import html
 def update_fig(params, key, title):
     ix = params["current_sample_ix"]
     data = params["layerdata"][ix][key]  # np.array(t,d)
-    return matrix_fig(data, title)
+    return matrix_fig(data, title, key)
 
 
-def matrix_fig(matrix, title, ylabels=None):
+def matrix_fig(matrix, title, key=None, ylabels=None):
     fig = px.imshow(
         matrix,
         labels=dict(x="data dimension (d)", y="tokens (T)", color="value"),
