@@ -1,6 +1,10 @@
-from dash import dcc, html
-from dash.dependencies import Input,Output,State
+from dash import dcc
+from dash import html
+from dash.dependencies import Input
+from dash.dependencies import Output
+from dash.dependencies import State
 from maindash import app
+
 
 def make_dropdown(params):
     ix = params["current_sample_ix"]
@@ -41,12 +45,13 @@ def make_layout(params):
         id="home",
     )
 
-@app.callback(Output("show-sample","children"),
-        Input("datastore","data"))
+
+@app.callback(Output("show-sample", "children"), Input("datastore", "data"))
 def update_sample(params):
     if not params:
         return
     else:
         ix = params["current_sample_ix"]
         sample = params["layerdata"][ix]["sample"]
-        return html.P(sample)
+        print(sample)
+        return html.P(" ".join(sample))
