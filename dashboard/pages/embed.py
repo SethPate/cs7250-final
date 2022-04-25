@@ -4,7 +4,7 @@ from dash import html
 from dash.dependencies import Input
 from dash.dependencies import Output
 from maindash import app
-from utils.functions import update_fig
+from utils.functions import update_fig, matrix_fig
 
 """
 Section for how embeddings work.
@@ -19,12 +19,12 @@ md = [
     ## how embeddings work
 
     Humans use words, but computers only understand numbers.
-    (actually, they only understand two numbers. Computers are pretty
-    dumb).
+    Actually, they only understand two numbers. Computers are pretty
+    dumb.
     So before we can use our Transformer, we have to turn our sentence
     into a bunch of numbers.
 
-    Here's how it looks for the first few words of our movie review:
+    Here's how that will look for the first few words of our movie review:
     """
     ),
     dcc.Markdown(
@@ -63,16 +63,15 @@ md = [
     As it turns out, we can do this by literally adding another special
     vector, the **position encoding**, which we keep on hand for
     just this task.
+    You can make these position encodings in a variety of ways.
+    The original paper *Attention is All You Need* [(2017)](https://arxiv.org/abs/1706.03762)
+    used **sin** and **cos** to generate vectors that look like this:
     """
     ),
     dcc.Markdown(
         """
     Here's those words from earlier. We just have to line them up with our
     position encodings and then add the two matrices together.
-
-    As you can see, each embedding has been changed. Now you can see
-    that the embeddings do have some bearing on the original position of
-    the words in the sentence.
     """
     ),
 ]
@@ -81,7 +80,7 @@ md = [
 def make_layout(params):
     layout = html.Div(
         [
-            html.H1("Embeddings"),
+            html.H1("Embeddings",id='embed-section'),
             html.Hr(),
             md[0],  # markdown
             html.Div(dcc.Graph(id="embed_fig")),
@@ -91,6 +90,11 @@ def make_layout(params):
             html.Div(dcc.Graph(id="pos_fig")),
             md[3],
             html.Div(dcc.Graph(id="combo_fig")),
+            dcc.Markdown("""
+                Each embedding has been changed. Now you can see
+                that the embeddings do have some bearing on the original position of
+                the words in the sentence.
+                """),
         ]
     )
 
@@ -104,7 +108,12 @@ def update_embed_fig(params):
     elif params["update_figs"] is False:
         raise dash.exceptions.PreventUpdate
     else:
-        return update_fig(params, "embedding", "embed")
+        ix = params['current_sample_ix']
+        layerdata=params['layerdata'][ix]
+        sample = layerdata['sample']
+        embed = layerdata['embedding']
+        fig = matrix_fig(embed[:5],"word embeddings",ylabels=sample[:5])
+        return fig
 
 
 @app.callback(Output("embed_fig2", "figure"), Input("datastore", "data"))
@@ -114,7 +123,7 @@ def update_embed_fig2(params):
     elif params["update_figs"] is False:
         raise dash.exceptions.PreventUpdate
     else:
-        return update_fig(params, "embedding", "embed2")
+        return update_fig(params, "embedding", "word embeddings")
 
 
 @app.callback(Output("pos_fig", "figure"), Input("datastore", "data"))
@@ -124,7 +133,7 @@ def update_pos(params):
     elif params["update_figs"] is False:
         raise dash.exceptions.PreventUpdate
     else:
-        return update_fig(params, "position", "position")
+        return update_fig(params, "position", "position vectors")
 
 
 @app.callback(Output("combo_fig", "figure"), Input("datastore", "data"))

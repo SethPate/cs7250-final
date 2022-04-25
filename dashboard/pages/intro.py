@@ -11,6 +11,8 @@ def make_layout(params):
 
     return html.Div(
         [
+            #html.H1("Transformers and You"),
+            #html.Hr(),
             dcc.Markdown(
                 """
             Transformer networks are the basic technology enabling modern
@@ -29,7 +31,7 @@ def make_layout(params):
             ),
             html.Div(
                 html.Img(
-                    src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgz-gW-L-HTRNa4FFX_HrnUnoQhXc2b7tjd-NFV_3KqG0n2pDrPzAhP-3Zx70jtygkDZV_VeE6u-XCjRWgY3ec_Ise8lK02iRuv6VzhJcayGnze6fv65oc3TgZ6JvfRso_xCW56-xI4xnScI0-oVsOu2kH3mBoU1CvtBVD99twdUtqsxyJj1DlAt3m1nQ/s16000/Screenshot%202022-04-01%205.25.47%20PM.png",
+                    src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgz-gW-L-HTRNa4FFX_HrnUnoQhXc2b7tjd-NFV_3KqG0n2pDrPzAhP-3Zx70jtygkDZV_VeE6u-XCjRWgY3ec_Ise8lK02iRuv6VzhJcayGnze6fv65oc3TgZ6JvfRso_xCW56-xI4xnScI0-oVsOu2kH3mBoU1CvtBVD99twdUtqsxyJj1DlAt3m1nQ/s1172/Screenshot%202022-04-01%205.25.47%20PM.png",
                     alt="log linear relationship graph",
                     style={"width": 500, "height": "auto"},
                 ),
@@ -41,7 +43,40 @@ def make_layout(params):
                 Sounds like something we should know about. Let's take a look at a toy Transformer!
             """
             ),
-            html.Div(id="show-sample"),
+            html.H1("Sentiment Classification",id="task-section"),
+            html.Hr(),
+            dcc.Markdown("""
+                We will build a network to predict whether a movie review is positive or negative.
+                This is called **sentiment classification**, and it's a common NLP task.
+                To train the network, we'll use the IMDB movie review [dataset](https://www.kaggle.com/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews).
+
+                Although the dataset has 50k samples total, we'll only show two of them here:
+            """),
+            html.Div([
+                html.Img(src="https://m.media-amazon.com/images/M/MV5BNGYyN2M0YmQtYWY5Ni00YjE4LWIzNDktMDJiMjgzZjg4OGNlXkEyXkFqcGdeQXVyMTQ3Njg3MQ@@._V1_.jpg",
+                    alt="movie poster for across the moon",
+                    style={'width':200, 'height':'auto'},
+                    ),
+                html.Img(src="https://upload.wikimedia.org/wikipedia/en/a/a6/The_Guardian_%282006_film%29_promotional_poster.jpg?20171215231323",
+                    alt="movie poster for the guardian",
+                    style={'width':200, 'height':'auto'},
+                    ),
+                ], style={'display':'flex',
+                            'text-align':'center',
+                            'justify-content':'space-evenly'}),
+            dcc.Markdown("""
+                Sample #1 was written from the seminal 1994 film *Across the Moon* starring Christina Applegate
+                and another person. I am afraid that it is negative.
+                Sample #2, on the other hand, is for the Kutcher/Costner pic *The Guardian*. Swoon! It's positive.
+
+                ### your selected sample:
+                """),
+            html.Div(id="show-sample", className="sample-text"),
+            dcc.Markdown("""
+                The way we've built our Transformer, it'll take in this **sample text** and return a **single number**:
+                a percentage representing its likelihood that the review is a positive one.
+                In the next sections, we'll see how the network gets that number.
+                """),
         ],
         id="home",
     )

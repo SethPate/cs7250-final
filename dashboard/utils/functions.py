@@ -3,13 +3,15 @@ from dash import dcc
 from dash import html
 
 
-def update_fig(params, key, title):
+def update_fig(params, key, title,
+        labels=dict(x="data dimension (d)", y="tokens (T)", color="value")):
     ix = params["current_sample_ix"]
     data = params["layerdata"][ix][key]  # np.array(t,d)
-    return matrix_fig(data, title, key)
+    return matrix_fig(data, title, key, labels=labels)
 
 
-def matrix_fig(matrix, title, key=None, ylabels=None):
+def matrix_fig(matrix, title, key=None, ylabels=None, 
+        labels=dict(x="data dimension (d)", y="tokens (T)", color="value")):
 
     if key == "final":
         valmin = 0
@@ -19,7 +21,7 @@ def matrix_fig(matrix, title, key=None, ylabels=None):
 
     fig = px.imshow(
         matrix,
-        labels=dict(x="data dimension (d)", y="tokens (T)", color="value"),
+        labels=labels,
         y=ylabels,
         zmin=valmin,
         zmax=valmax,

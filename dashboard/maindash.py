@@ -8,4 +8,4 @@ app = dash.Dash(
         dbc.themes.BOOTSTRAP,
     ],
 )
-app.title = "Robots in Disguise"
+app.title = "Pretty Transformers"

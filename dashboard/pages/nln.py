@@ -17,25 +17,38 @@ def get_layout(params):
             html.Hr(),
             dcc.Markdown(
                 """
-        ## purpose of a feedforward layer
+        ## linear transformations
+
+        Immediately after the attention block comes a linear transformation, in which
+        we multiply the **attention output** by some number, and then add another number
+        (a **bias**) to it. Here is what our encoded sample looks like afterward:
 
         """
             ),
             html.Div(dcc.Graph(id="linear")),
             dcc.Markdown(
                 """
-        ## residual connections
-        - show two layers normally
-        - show three layers residually
+        ## rectified linear unit (ReLU)
+
+        The ReLU is a simple function. When you give it a matrix, it
+        just changes all the negative numbers to 0. This is a **nonlinear
+        transformation**, and using such a nonlinearity as an **activation function**
+        is a key part of deep learning.
+        Nonlinear functions can learn more complex patterns than linear functions.
+
+        Here you can see the impact of the ReLU on our linear output. Quite a change!
         """
             ),
             html.Div(dcc.Graph(id="relu")),
             dcc.Markdown(
                 """
-        ## layer norm
+        ## layer normalization
 
-        Transform the outputs of a certain layer to mean 0 and std 1.
-        Layer normalization is an alternative to batch normalization.
+        Every time we go through one of these nonlinear transformations, our data
+        get a little less normally distributed. We'd like them to be clustered around 0,
+        though. **Layer normalization** is a commonly used technique that scales the outputs
+        of the layer by subtracting their mean dividing them by their standard deviation.
+        This seems to help the model train more quickly, more *stably*.
 
         """
             ),

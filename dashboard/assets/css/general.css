@@ -18,6 +18,14 @@
     position: relative;
 }
 
+.sample-text{
+    margin-left: 35px;
+    margin-right: 35px;
+    font-family: Lato;
+    font-size: 14pt;
+    color: #034ea2;
+}
+
 #sidebar {
     text-align: center;
     padding: 2rem 1rem;

@@ -46,7 +46,12 @@ def get_sidebar(params):
     # it consists of a title, and a toggle, the latter is hidden on large screens
     sidebar_header = dbc.Row(
         [
-            dbc.Col(html.H2("Pretty Transformers"), className="text-center"),
+            dbc.Col(html.H2([
+                html.Span("Pretty\n",
+                    style={"color":"#cc4778"}),
+                html.Span("Transformers",
+                    style={"color":"#7e03a8"})
+                ]))
         ]
     )
 
@@ -64,6 +69,7 @@ def get_sidebar(params):
                     ),
                 ],
                 id="blurb",
+                #style={'text-align':'center'},
             ),
             # use the Collapse component to animate hiding / revealing links
             dbc.Nav(

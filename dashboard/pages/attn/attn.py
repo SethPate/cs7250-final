@@ -15,7 +15,6 @@ from .style import stylesheet  # specific to cytoscape
 
 WORDS_PER_ROW = 7  # at 800px width
 
-
 def get_elements(params):
     """Makes nodes for the cytoscape."""
 
@@ -44,13 +43,14 @@ def get_spans(params):
         attn = np.ones(len(words))
     else:
         attn = [
-            attn_weights[selected_word_ix][i] if i != selected_word_ix else 1.0
+            #attn_weights[selected_word_ix][i] if i != selected_word_ix else 1.0
+            attn_weights[selected_word_ix][i]
             for i in range(len(words))
         ]
 
     # set minimum opacity
     opacity = np.array(attn)
-    opacity[opacity < 0.2] = 0.2
+    opacity[opacity < 0.2] = 0.1
 
     spans = []
     tooltips = []
@@ -123,9 +123,6 @@ def get_layout(params):
     at the center.
     """
 
-    description = html.P(
-        "Mouse over words to see their attention value below. Click to select."
-    )
 
     current_sample_ix = params["current_sample_ix"]
     words = params["layerdata"][current_sample_ix]["sample"]
@@ -171,32 +168,72 @@ def get_layout(params):
             html.Div(dcc.Graph(id="v")),
             dcc.Markdown(
                 """
-                raw qk
+                If you were to multiply the **query** and **key** matrices, you would
+                end up with a square matrix, filled with the **dot product** of every word's
+                query vector and every other word's value vector:
                 """
             ),
             html.Div(dcc.Graph(id="qk")),
             dcc.Markdown(
                 """
-                ## scaled qk
+                Higher dot products will indicate stronger relationships, higher **attention**.
+
+                ## scaled dot product attention
+
+                These raw dot products can be turned into a **distribution** with the **softmax** function.
+                But there is a problem. Dot products are **unbounded**, and as the vectors get longer
+                (which happens when we increase the **dimension** of our model layers, to make them better),
+                the dot products can run away. **Softmax** does not play nicely with runaway numbers;
+                very large values can make softmax 'peaky', acting more like a regular **max** function.
+
+                We don't want a peaky softmax, we want a distribution! So we scale the matrix by dividing
+                it, *element wise*, by the square root of **d**. Now you can see that the values are under
+                control again:
                 """
             ),
             html.Div(dcc.Graph(id="scaled")),
             dcc.Markdown(
                 """
-                ## attention
+                Now we can apply the softmax! And when we do, look at what we get -- **attention values**!
                 """
             ),
             html.Div(dcc.Graph(id="attention")),
+            dcc.Markdown(
+                """
+                The softmax changed every row into a distribution of numbers that sum to one.
+                Values that were relatively high become very high, suppressing all the other numbers.
+                The bright spots on this plot indicate word pairs (one x, one y) with **strong attention**.
+                The model thinks there is some important relationship between those words,
+                at least when it comes to classifying movie reviews.
+                """
+            ),
             html.Hr(),
-            description,
-            # paragraph,
+            dcc.Markdown("""
+                ## attention playground
+
+                We've built a silly little widget for you to understand attention a little better.
+
+                The grid below has words for all of your sample tokens. If you **click to select** a word,
+                then the review below will change so that words are colored according to their **attention
+                value**. The darkest words are the ones most relevant to your selection, according to the 
+                Transformer. You can hover your mouse over the words below to see the exact attention score.
+                """),
             cyto_layout,
-            html.P(id="span-holder", children=spans),
-            # html.P(id="display", children=params["selected_word_ix"]),
+            html.Br(),
+            html.Div(id="span-holder", children=spans, className="sample-text"),
             html.Hr(),
             dcc.Markdown(
                 """
-                ## value
+                ## attention output
+
+                We actually use the attention scores like **coefficients** or a **mask**.
+                We multiply the mask with the **value** vector from earlier.
+                Remember that **value** has one entry per word; it's shape **(T,d)**.
+                So multiplying the attention matrix of **(T,T)** against **value**
+                just results in another **(T,d)** matrix, the same shape as our input!
+                
+                But the attention process filtered that **value** data for us.
+                Now the output will be weighted toward word pairs with strong attention values.
                 """
             ),
             html.Div(dcc.Graph(id="attn-value")),
@@ -268,7 +305,9 @@ def update_qk(params):
     elif params["update_figs"] is False:
         raise dash.exceptions.PreventUpdate
     else:
-        return update_fig(params, "qk", "query * key")
+        labels = dict(x='tokens (T)', y='tokens (T)', color='value')
+        fig = update_fig(params, "qk", "query * key", labels=labels)
+        return fig
 
 
 @app.callback(Output("scaled", "figure"), Input("datastore", "data"))
@@ -278,7 +317,9 @@ def update_scaled(params):
     elif params["update_figs"] is False:
         raise dash.exceptions.PreventUpdate
     else:
-        return update_fig(params, "scaled", "scaled")
+        labels = dict(x='tokens (T)', y='tokens (T)', color='value')
+        fig = update_fig(params, "scaled", "scaled", labels=labels)
+        return fig
 
 
 @app.callback(Output("attention", "figure"), Input("datastore", "data"))
@@ -288,7 +329,9 @@ def update_attention(params):
     elif params["update_figs"] is False:
         raise dash.exceptions.PreventUpdate
     else:
-        return update_fig(params, "attention", "attention")
+        labels = dict(x='tokens (T)', y='tokens (T)', color='value')
+        fig = update_fig(params, "attention", "attention", labels=labels)
+        return fig
 
 
 @app.callback(Output("attn-value", "figure"), Input("datastore", "data"))
