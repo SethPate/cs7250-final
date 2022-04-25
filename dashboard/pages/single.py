@@ -71,8 +71,6 @@ def make_single_layout():
 def displayer(data):
     return data["selected_word_ix"]
 
-
-s
 """
 Update the data to reflect a selected word from the cytoscape.
 """
