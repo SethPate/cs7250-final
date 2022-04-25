@@ -7,7 +7,8 @@ from dash.dependencies import Input
 from dash.dependencies import Output
 from dash.dependencies import State
 from maindash import app
-from utils.functions import update_fig, matrix_fig
+from utils.functions import matrix_fig
+from utils.functions import update_fig
 
 from .style import stylesheet  # specific to cytoscape
 
@@ -120,7 +121,7 @@ def get_layout(params):
     current_sample_ix = params["current_sample_ix"]
     words = params["layerdata"][current_sample_ix]["sample"]
 
-    paragraph = html.P(" ".join(words))
+    # paragraph = html.P(" ".join(words))
 
     rows = len(words) // WORDS_PER_ROW
     cyto_layout = get_cyto_layout(params, n_rows=rows)
@@ -131,81 +132,99 @@ def get_layout(params):
     layout = html.Div(
         [
             dcc.Store(id="datastore", data=params),
-            html.H1("Attention",id='attn-section'),
+            html.H1("Attention", id="attn-section"),
             html.Hr(),
-            dcc.Markdown('''
+            dcc.Markdown(
+                """
                 ## query, key, and value
-                '''),
-            html.Div(id='qkv'),
-
-            dcc.Markdown('''
+                """
+            ),
+            html.Div(id="qkv"),
+            dcc.Markdown(
+                """
                 ## raw qk
-                '''),
-            html.Div(id='qk'),
-            dcc.Markdown('''
+                """
+            ),
+            html.Div(id="qk"),
+            dcc.Markdown(
+                """
                 ## scaled qk
-                '''),
-            html.Div(id='scaled'),
-            dcc.Markdown('''
-                ## attention 
-                '''),
-            html.Div(id='attention'),
+                """
+            ),
+            html.Div(id="scaled"),
+            dcc.Markdown(
+                """
+                ## attention
+                """
+            ),
+            html.Div(id="attention"),
             html.Hr(),
             description,
-            paragraph,
+            # paragraph,
             cyto_layout,
             html.P(id="span-holder", children=spans),
             html.P(id="display", children=params["selected_word_ix"]),
             html.Hr(),
-            dcc.Markdown('''
-                ## value 
-                '''),
-            html.Div(id='attn-value'),
+            dcc.Markdown(
+                """
+                ## value
+                """
+            ),
+            html.Div(id="attn-value"),
         ]
     )
 
     return layout
 
-@app.callback(Output("qkv","children"),
-            Input("datastore","data"))
+
+@app.callback(Output("attn-cyto", "elements"), Input("datastore", "data"))
+def update_cyto(params):
+    if not params:
+        return
+    else:
+        return get_elements(params)
+
+
+@app.callback(Output("qkv", "children"), Input("datastore", "data"))
 def update_qkv(params):
     if not params:
         return
     else:
         return
-        #return update_fig(params, 'linear', "query, key, value")
+        # return update_fig(params, 'linear', "query, key, value")
 
-@app.callback(Output("qk","children"),
-            Input("datastore","data"))
+
+@app.callback(Output("qk", "children"), Input("datastore", "data"))
 def update_qk(params):
     if not params:
         return
     else:
         return update_fig(params, "qk", "query * key")
 
-@app.callback(Output("scaled", "children"),
-            Input("datastore","data"))
+
+@app.callback(Output("scaled", "children"), Input("datastore", "data"))
 def update_scaled(params):
     if not params:
         return
     else:
         return update_fig(params, "scaled", "scaled")
 
-@app.callback(Output("attention", "children"),
-            Input("datastore","data"))
+
+@app.callback(Output("attention", "children"), Input("datastore", "data"))
 def update_attention(params):
     if not params:
         return
     else:
         return update_fig(params, "attention", "attention")
 
-@app.callback(Output("attn-value", "children"),
-            Input("datastore","data"))
+
+@app.callback(Output("attn-value", "children"), Input("datastore", "data"))
 def update_attn_value(params):
     if not params:
         return
     else:
         return update_fig(params, "attn_value", "attention * value")
+
 
 @app.callback(Output("span-holder", "children"), Input("datastore", "data"))
 def span_update(data):

@@ -1,5 +1,9 @@
 from dash import dcc
 from dash import html
+from dash.dependencies import Input
+from dash.dependencies import Output
+from dash.dependencies import State
+from maindash import app
 
 explain = dcc.Markdown(
     """
@@ -18,13 +22,25 @@ explain = dcc.Markdown(
 )
 
 
+def make_dropdown(params):
+    ix = params["current_sample_ix"]
+    samples = [0, 1]
+    sample_ids = [f"Sample {i+1}" for i in samples]
+    return html.Div(
+        [
+            dcc.Dropdown(sample_ids, sample_ids[0], id="dropdown-samples"),
+        ],
+    )
+
+
 def make_layout(params):
     ix = params["current_sample_ix"]
     sample = params["layerdata"][ix]["sample"]
-
+    dropdown = make_dropdown(params)
     return html.Div(
         [
             explain,
+            dropdown,
             html.P(" ".join(sample)),
         ],
         id="home",

@@ -11,8 +11,8 @@ from scipy.special import softmax
 
 from . import decoder
 from . import embed
-from . import nln
 from . import intro
+from . import nln
 from . import sidebar
 from .attn import attn
 
@@ -37,6 +37,7 @@ def get_dummy_data(params):
     """
     with open(fake_data_path, "rb") as f:
         fake_data = pickle.load(f)
+        print(len(fake_data[0]["sample"]))
 
     return fake_data
 
@@ -73,6 +74,7 @@ def make_single_layout():
 def displayer(data):
     return data["selected_word_ix"]
 
+
 """
 Update the data to reflect a selected word from the cytoscape.
 """
@@ -82,9 +84,12 @@ Update the data to reflect a selected word from the cytoscape.
     Output("datastore", "data"),
     Input("attn-cyto", "selectedNodeData"),
     Input("attn-cyto", "mouseoverNodeData"),
+    Input("dropdown-samples", "value"),
     State("datastore", "data"),
 )
-def selectHelper(selections, mouseover, data):
+def selectHelper(selections, mouseover, dropdown_value, data):
+    sample = int(dropdown_value.split(" ")[-1]) - 1
+    data["current_sample_ix"] = sample
     if selections:
         data["selected_word_ix"] = selections[0]["ix"]
     elif mouseover:
