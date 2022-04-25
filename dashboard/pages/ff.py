@@ -1,11 +1,13 @@
-from dash import html
-from dash import dcc
 import plotly.express as px
+from dash import dcc
+from dash import html
+from dash.dependencies import Input
+from dash.dependencies import Output
 from maindash import app
-from dash.dependencies import Input,Output
 from utils.functions import matrix_fig
 
-explain = dcc.Markdown('''
+explain = dcc.Markdown(
+    """
     ## purpose of a feedforward layer
 
     Nonlinearities. See example of transform and relu. What is a relu?
@@ -25,24 +27,29 @@ explain = dcc.Markdown('''
     - show post batch norm
     - show post layer norm
 
-    ''')
+    """
+)
+
 
 def get_layout(params):
-    layout = html.Div([
-        html.H1("Feedforward", id="ff-section"),
-        html.Hr(),
-        explain,
-        html.Div(id='ff-figure'),
-        ])
+    layout = html.Div(
+        [
+            html.H1("Feedforward", id="ff-section"),
+            html.Hr(),
+            explain,
+            html.Div(id="ff-figure"),
+        ]
+    )
     return layout
 
+
 def make_ff_fig(params):
-    ix = params['current_sample_ix']
-    ff = params['layerdata'][ix]['linear_1'] # np.array(t,d)
+    ix = params["current_sample_ix"]
+    ff = params["layerdata"][ix]["linear_1"]  # np.array(t,d)
     return matrix_fig(ff, "feedforward output")
 
-@app.callback(Output("ff-figure","children"),
-            Input("datastore","data"))
+
+@app.callback(Output("ff-figure", "children"), Input("datastore", "data"))
 def update_ff(data):
     if not data:
         return
