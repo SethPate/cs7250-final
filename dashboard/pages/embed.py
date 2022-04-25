@@ -1,5 +1,6 @@
 from dash import html
 from dash import dcc
+from utils.functions import matrix_fig
 
 """
 Section for how embeddings work.
@@ -55,9 +56,21 @@ explain = dcc.Markdown('''
     the words in the sentence.
     ''')
 
-def make_layout():
-    return html.Div([
+def make_layout(params):
+    ix = params['current_sample_ix']
+    layerdata = params['layerdata'][ix]
+
+    # make figures to show embeddings
+    sample = layerdata['sample']
+    embed = layerdata['embedding']
+    position_fig = matrix_fig(embed[:5], "word embeddings",
+        ylabels=sample[:5])
+
+    layout = html.Div([
         html.H1("Embeddings"),
         html.Hr(),
         explain,
+        position_fig,
     ])
+
+    return layout

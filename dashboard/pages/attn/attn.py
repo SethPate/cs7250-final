@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 from dash import html
 from dash import dcc
 from dash.dependencies import Input,Output,State
-from pages.maindash import app
+from maindash import app
 import numpy as np
 
 from .style import stylesheet # specific to cytoscape
@@ -101,7 +101,11 @@ def get_cyto_layout(params, n_rows):
 explain = dcc.Markdown('''
     ## query, key, value attention
 
-    This is a demonstration and explanation of qkv attention.
+    - show q, k, v, matrices with their words
+    - show q*k = qk
+    - show scaled qk
+    - show softmax(scaled qk)
+    - show softmax * v = output
 
     ## multi head attention
 

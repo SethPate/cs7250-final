@@ -5,7 +5,7 @@ import numpy as np
 from scipy.special import softmax
 import pickle
 
-from pages.maindash import app
+from maindash import app
 from . import intro
 from . import sidebar
 from .attn import attn
@@ -47,8 +47,8 @@ def make_single_layout():
     loc = dcc.Location(id="url")
     sb = sidebar.sidebar_layout
     content = html.Div([
-        intro.make_layout(),
-        embed.make_layout(),
+        intro.make_layout(params),
+        embed.make_layout(params),
         attn.get_layout(params),
         ff.get_layout(params),
         decoder.get_layout(),

@@ -1,7 +1,7 @@
 from dash import html
 from dash import dcc
 import plotly.express as px
-from pages.maindash import app
+from maindash import app
 from dash.dependencies import Input,Output
 from utils.functions import matrix_fig
 
@@ -9,17 +9,22 @@ explain = dcc.Markdown('''
     ## purpose of a feedforward layer
 
     Nonlinearities. See example of transform and relu. What is a relu?
+    - show unbalanced 'before' transformation
+    - show unbalanced 'after' transformation
+
+    ## residual connections
+    - show two layers normally
+    - show three layers residually
 
     ## layer norm
 
     Transform the outputs of a certain layer to mean 0 and std 1.
-
     Layer normalization is an alternative to batch normalization.
 
-    ## scaling
+    - show 'after'
+    - show post batch norm
+    - show post layer norm
 
-    Scaling is meant to 'stabilize' training by reducing the
-    'temperature' of the softmax.
     ''')
 
 def get_layout(params):

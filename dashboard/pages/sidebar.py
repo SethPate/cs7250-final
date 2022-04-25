@@ -1,7 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from dash import html
-from . maindash import app
+from maindash import app
 
 @app.callback(
     Output("sidebar", "className"),

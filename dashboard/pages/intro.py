@@ -9,9 +9,16 @@ explain = dcc.Markdown('''
 
     Here is what we are going to do -- we are going to classify movie
     reviews.
+
+    This is the sample we have right now. You can change it if you want,
+    and the rest of this page will update to show the new data.
 ''')
 
-def make_layout():
+def make_layout(params):
+    ix = params['current_sample_ix']
+    sample = params['layerdata'][ix]['sample']
+
     return html.Div([
         explain,
+        html.P(" ".join(sample)),
     ])

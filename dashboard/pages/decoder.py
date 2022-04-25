@@ -10,6 +10,9 @@ explain = dcc.Markdown('''
     transformation to determine a single number. That number
     represents the model's confidence that the sample is positive.
 
+    - show layer * weight = guess
+    - show logistic on guess
+
     Logistic layer...
 
     Transformer models with more complicated tasks, like language modeling,
