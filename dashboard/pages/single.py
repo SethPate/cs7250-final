@@ -45,7 +45,7 @@ def make_single_layout():
     # init params and grab data
     params = {
         "current_sample_ix": 0,
-        "selected_word_ix": 0,
+        "selected_word_ix": None,
     }
     params["layerdata"] = get_dummy_data(params)
 

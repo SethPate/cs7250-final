@@ -17,6 +17,7 @@ def matrix_fig(matrix, title, ylabels=None):
         font_size=16,
         )
     graph = dcc.Graph(figure=fig,
-        config={'displaylogo':False}
+        config={'displaylogo':False},
+        responsive=True,
         )
     return graph 

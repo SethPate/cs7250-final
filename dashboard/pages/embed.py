@@ -9,7 +9,7 @@ and how the two are combined.
 """
 
 # blurb to explain things
-explain = dcc.Markdown('''
+md = [dcc.Markdown('''
     ## how embeddings work
 
     Humans use words, but computers only understand numbers.
@@ -27,7 +27,8 @@ explain = dcc.Markdown('''
 
     The result of the dictionary lookup -- the 'definition' of the word --
     is called an **embedding**.
-
+    '''),
+    dcc.Markdown('''
     ## adding position information
 
     Transformer models don't have any inherent sense of position.
@@ -47,7 +48,8 @@ explain = dcc.Markdown('''
     As it turns out, we can do this by literally adding another special
     vector, the **position encoding**, which we keep on hand for
     just this task.
-
+    '''),
+    dcc.Markdown('''
     Here's those words from earlier. We just have to line them up with our
     position encodings and then add the two matrices together.
 
@@ -55,6 +57,7 @@ explain = dcc.Markdown('''
     that the embeddings do have some bearing on the original position of
     the words in the sentence.
     ''')
+    ]
 
 def make_layout(params):
     ix = params['current_sample_ix']
@@ -63,14 +66,26 @@ def make_layout(params):
     # make figures to show embeddings
     sample = layerdata['sample']
     embed = layerdata['embedding']
-    position_fig = matrix_fig(embed[:5], "word embeddings",
+    pos = layerdata['position']
+    combo = embed + pos
+
+    embed_fig = matrix_fig(embed[:5], "word embeddings",
+        ylabels=sample[:5])
+    pos_fig = matrix_fig(pos[:5], "position embeddings",
+        ylabels=['(first)','(second)','(third)','(fourth)',
+                '(fifth)'])
+    combo_fig = matrix_fig(combo[:5], "word + position",
         ylabels=sample[:5])
 
     layout = html.Div([
         html.H1("Embeddings"),
         html.Hr(),
-        explain,
-        position_fig,
+        md[0], # markdown
+        embed_fig,
+        md[1],
+        pos_fig,
+        md[2],
+        combo_fig,
     ])
 
     return layout
