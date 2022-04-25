@@ -20,9 +20,11 @@ layers = [
     'key',
     'value',
     'attention',
-    'linear-1',
-    'linear-2',
-    'decoder'
+    'linear',
+    'relu',
+    'norm',
+    'scaling',
+    'decoder',
     ]
 
 def make_pos_vectors(t,d):
@@ -39,23 +41,34 @@ def sample_to_layers(s):
     sample = s.split(" ")
     t = len(sample) # number of tokens
     d = 128 # model hidden dimension
+    lo, hi = -3, 3
 
     embedding = np.random.normal(size=(t,d))
     #position = np.random.normal(size=(t,d))
     position = make_pos_vectors(t,d)
     combined = embedding + position
 
-    query = np.random.normal(size=(t,d))
-    key = np.random.normal(size=(t,d))
-    value = np.random.normal(size=(t,d))
+    query = np.random.uniform(lo,hi,size=(t,d))
+    key = np.random.uniform(lo,hi,size=(t,d))
+    value = np.random.uniform(lo,hi,size=(t,d))
 
-    attention = np.random.normal(size=(t,t))
-    attention *= 50 # make softmax less uniform
-    attention = softmax(attention, axis=1)
+    qk = np.matmul(query, key.transpose())
+    scale_term = np.sqrt(d)
+    scaled = qk / scale_term
 
-    linear_1 = np.random.normal(size=(t,d))
-    linear_2 = np.random.normal(size=(t,d))
+    attention = softmax(scaled, axis=1)
+    attn_value = np.matmul(attention, value)
+
+    # throw the data off gaussian to make norm effect clear
+    w_linear = np.random.uniform(lo-1,hi+1,size=(t,d))
+    linear = attn_value * w_linear
+    relu = linear.copy()
+    relu[relu < 0] = 0.
+    norm = relu - relu.mean(axis=0)
+    norm /= norm.std(axis=0)
+
     decoder = np.random.normal(size=1)
+    final = 1 / (1 + np.exp(-1 * decoder))
 
     l = {
         'sample' : sample, # list of words
@@ -65,10 +78,16 @@ def sample_to_layers(s):
         'query' : query,
         'key' : key,
         'value' : value,
-        'attention' : attention,
-        'linear_1' : linear_1,
-        'linear_2' : linear_2,
+        'qk' : qk, # Q * K
+        'scaled': scaled, # apply scaled dot product
+        'attention': attention, # smx(scaled_qk)
+        'attn_value': attn_value, # attn * value
+        'w_linear': w_linear, # weights
+        'linear' : linear, # raw linear output
+        'relu' : relu, # after relu
+        'norm' : norm, # after layer norm
         'decoder' : decoder,
+        'final': final,
         }
 
     return l

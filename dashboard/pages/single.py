@@ -28,9 +28,12 @@ def get_dummy_data(params):
     Called by view.py to supplement params.
     Returns a list of samples.
     Each sample has the following keys:
+        sample,
         embedding, position, combined,
-        query, key, value, attention,
-        linear-1, linear-2, decoder
+        query, key, value,
+        qk, scaled, attention, attn_value,
+        w_linear, linear, relu, norm,
+        decoder, final
     """
     with open(fake_data_path, "rb") as f:
         fake_data = pickle.load(f)
@@ -44,7 +47,7 @@ def make_single_layout():
     # init params and grab data
     params = {
         "current_sample_ix": 0,
-        "selected_word_ix": None,
+        "selected_word_ix": 0,
     }
     params["layerdata"] = get_dummy_data(params)
 
