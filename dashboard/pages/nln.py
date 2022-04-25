@@ -4,7 +4,7 @@ from dash import html
 from dash.dependencies import Input
 from dash.dependencies import Output
 from maindash import app
-from utils.functions import matrix_fig
+from utils.functions import matrix_fig, update_fig
 
 def get_layout(params):
     layout = html.Div([
@@ -13,9 +13,6 @@ def get_layout(params):
         dcc.Markdown('''
         ## purpose of a feedforward layer
 
-        Nonlinearities. See example of transform and relu. What is a relu?
-        - show unbalanced 'before' transformation
-        - show unbalanced 'after' transformation
         '''),
         html.Div(id='linear'),
         dcc.Markdown('''
@@ -34,11 +31,6 @@ def get_layout(params):
         html.Div(id='norm'),
         ])
     return layout
-
-def update_fig(params, key, title):
-    ix = params['current_sample_ix']
-    data = params['layerdata'][ix][key] # np.array(t,d)
-    return matrix_fig(data, title)
 
 @app.callback(Output("linear","children"),
             Input("datastore","data"))

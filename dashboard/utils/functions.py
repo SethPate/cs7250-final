@@ -2,6 +2,11 @@ import numpy as np
 from dash import dcc, html
 import plotly.express as px
 
+def update_fig(params, key, title):
+    ix = params['current_sample_ix']
+    data = params['layerdata'][ix][key] # np.array(t,d)
+    return matrix_fig(data, title)
+
 def matrix_fig(matrix, title, ylabels=None):
     fig = px.imshow(
         matrix,
