@@ -96,7 +96,7 @@ def get_cyto_layout(params, n_rows):
         },
         style={
             "width": "800px",
-            "height": f"{n_rows * 30}px",
+            "height": f"{n_rows * 30 + 10}px",
         },
         panningEnabled=False,
         zoomingEnabled=False,
@@ -164,7 +164,7 @@ def get_layout(params):
             # paragraph,
             cyto_layout,
             html.P(id="span-holder", children=spans),
-            html.P(id="display", children=params["selected_word_ix"]),
+            #html.P(id="display", children=params["selected_word_ix"]),
             html.Hr(),
             dcc.Markdown(
                 """
@@ -182,6 +182,8 @@ def get_layout(params):
 def update_cyto(params):
     if not params:
         return
+    elif params["update_figs"] is False:
+        raise dash.exceptions.PreventUpdate
     else:
         return get_elements(params)
 

@@ -84,21 +84,21 @@ Update the data to reflect a selected word from the cytoscape.
 @app.callback(
     Output("datastore", "data"),
     Input("attn-cyto", "selectedNodeData"),
-    Input("attn-cyto", "mouseoverNodeData"),
+    #Input("attn-cyto", "mouseoverNodeData"),
     Input("dropdown-samples", "value"),
     State("datastore", "data"),
 )
-def selectHelper(selections, mouseover, dropdown_value, data):
+def selectHelper(selections, dropdown_value, data):
     sample = int(dropdown_value.split(" ")[-1]) - 1
     if sample != data["current_sample_ix"]:
         data["current_sample_ix"] = sample
         data["update_figs"] = True
     else:
-        data["update_figs"] = False
+        data["update_figs"] = True
     if selections:
         data["selected_word_ix"] = selections[0]["ix"]
-    elif mouseover:
-        data["selected_word_ix"] = mouseover["ix"]
+    #elif mouseover:
+    #    data["selected_word_ix"] = mouseover["ix"]
     else:
         data["selected_word_ix"] = None
     return data
