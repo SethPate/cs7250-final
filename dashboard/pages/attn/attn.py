@@ -137,7 +137,25 @@ def get_layout(params):
             html.Hr(),
             dcc.Markdown(
                 """
-                ## query, key, and value
+                ## query, key, and value self-attention
+
+                The embedding layer turned our sample into an
+                **embedding matrix** of size **(T,d)**.
+                Now our Transformer has to **encode** this information
+                so that we can do useful things with it, like
+                decide whether or not Ashton Kutcher is a good actor.
+
+                The Transformer will do this through **self-attention**.
+                This simply means that the Transformer will assign meaning
+                to each word according to its relationship to all the *other*
+                words in the sample. That relationship is called **attention**,
+                and words that are closely related are said to **attend** strongly
+                to each other.
+
+                The first step in self-attention is transforming our **embedding matrix**
+                into three different matrices: the **query, key** and **value** matrices.
+                Each matrix is shaped the same as the original embedding, (T,d).
+                Here's what they look like for a few of the words in our sample.
                 """
             ),
             html.Div(dcc.Graph(id="qkv")),
@@ -195,7 +213,17 @@ def update_qkv(params):
     elif params["update_figs"] is False:
         raise dash.exceptions.PreventUpdate
     else:
-        return update_fig(params, "linear", "query, key, value")
+        ix = params['current_sample_ix']
+        layerdata = params['layerdata'][ix]
+        sample = layerdata['sample']
+        q = layerdata['query']
+        k = layerdata['key']
+        v = layerdata['value']
+        qfig = matrix_fig(q[:5],'queries',sample[:5])
+        kfig = matrix_fig(k[:5],'keys',sample[:5])
+        vfig = matrix_fig(v[:5],'values',sample[:5])
+        return html.Div([
+            qfig,kfig,vfig])
 
 
 @app.callback(Output("qk", "figure"), Input("datastore", "data"))

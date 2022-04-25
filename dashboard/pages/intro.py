@@ -36,17 +36,21 @@ def make_layout(params):
             In Google's case, PaLM is 540bn parameters large -- the largest
             model yet -- but there is still a log-linear relationship
             between model size and performance at the margin.
-
-            ![loglinear](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgz-gW-L-HTRNa4FFX_HrnUnoQhXc2b7tjd-NFV_3KqG0n2pDrPzAhP-3Zx70jtygkDZV_VeE6u-XCjRWgY3ec_Ise8lK02iRuv6VzhJcayGnze6fv65oc3TgZ6JvfRso_xCW56-xI4xnScI0-oVsOu2kH3mBoU1CvtBVD99twdUtqsxyJj1DlAt3m1nQ/s16000/Screenshot%202022-04-01%205.25.47%20PM.png)
-
-            Put simply,
-
+            """),
+            html.Div(
+                html.Img(src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgz-gW-L-HTRNa4FFX_HrnUnoQhXc2b7tjd-NFV_3KqG0n2pDrPzAhP-3Zx70jtygkDZV_VeE6u-XCjRWgY3ec_Ise8lK02iRuv6VzhJcayGnze6fv65oc3TgZ6JvfRso_xCW56-xI4xnScI0-oVsOu2kH3mBoU1CvtBVD99twdUtqsxyJj1DlAt3m1nQ/s16000/Screenshot%202022-04-01%205.25.47%20PM.png",
+                    alt="log linear relationship graph",
+                    style={'width':500,'height':'auto'}),
+                style={'text-align':'center'}),
+            dcc.Markdown("""
+                This implies that we haven't yet reached the technical limit of what Transformers can do for us.
+                Sounds like something we should know about. Let's take a look at a toy Transformer!
             """
             ),
             make_dropdown(params),
             html.Div(id="show-sample"),
         ],
-        id="home",
+        id="home"
     )
 
 
