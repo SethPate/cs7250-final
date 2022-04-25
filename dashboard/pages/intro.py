@@ -1,10 +1,11 @@
+import dash
 from dash import dcc
 from dash import html
 from dash.dependencies import Input
 from dash.dependencies import Output
 from dash.dependencies import State
 from maindash import app
-import dash
+
 
 def make_dropdown(params):
     ix = params["current_sample_ix"]

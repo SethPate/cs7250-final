@@ -3,9 +3,7 @@ from dash import dcc
 from dash import html
 from dash.dependencies import Input
 from dash.dependencies import Output
-from dash.dependencies import State
 from maindash import app
-from utils.functions import matrix_fig
 from utils.functions import update_fig
 
 """
@@ -81,21 +79,6 @@ md = [
 
 
 def make_layout(params):
-    ix = params["current_sample_ix"]
-    layerdata = params["layerdata"][ix]
-
-    # make figures to show embeddings
-    sample = layerdata["sample"]
-    embed = layerdata["embedding"]
-    pos = layerdata["position"]
-    combo = embed + pos
-    embed_fig = matrix_fig(
-        embed[:5], "word embeddings", key="embedding", ylabels=sample[:5]
-    )
-    embed_fig2 = update_fig(params, "embedding", "word embeddings")
-    pos_fig = matrix_fig(pos, "position embeddings")
-    combo_fig = matrix_fig(combo[:5], "word + position", ylabels=sample[:5])
-
     layout = html.Div(
         [
             html.H1("Embeddings"),
