@@ -126,7 +126,7 @@ def update_embed_fig2(params):
         return update_fig(params, "embedding", "embed2")
 
 
-@app.callback(Output("pos", "children"), Input("datastore", "data"))
+@app.callback(Output("pos_fig", "children"), Input("datastore", "data"))
 def update_pos(params):
     if not params:
         return
@@ -135,7 +135,7 @@ def update_pos(params):
     else:
         return update_fig(params, "position", "position")
 
-@app.callback(Output("combo", "children"), Input("datastore", "data"))
+@app.callback(Output("combo_fig", "children"), Input("datastore", "data"))
 def update_combo(params):
     if not params:
         return
