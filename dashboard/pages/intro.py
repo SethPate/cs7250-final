@@ -12,7 +12,7 @@ def make_dropdown(params):
     sample_ids = [f"Sample {i+1}" for i in samples]
     return html.Div(
         [
-            dcc.Dropdown(sample_ids, sample_ids[0], id="dropdown-samples"),
+            dcc.Dropdown(sample_ids, sample_ids[ix], id="dropdown-samples"),
         ],
     )
 
@@ -21,7 +21,8 @@ def make_layout(params):
 
     return html.Div(
         [
-            dcc.Markdown('''
+            dcc.Markdown(
+                """
             Transformer networks are the basic technology enabling modern
             large language models, including:
             * the [Google Pathways Language Model](https://ai.googleblog.com/2022/04/pathways-language-model-palm-scaling-to.html), which explain bad jokes about TPU 'pods', and
@@ -39,9 +40,10 @@ def make_layout(params):
 
             Put simply,
 
-            '''),
+            """
+            ),
             make_dropdown(params),
-            html.Div(id='show-sample'),
+            html.Div(id="show-sample"),
         ],
         id="home",
     )
