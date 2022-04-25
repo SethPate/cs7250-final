@@ -1,6 +1,6 @@
 from dash import dcc
 from dash import html
-from utils.functions import matrix_fig
+from utils.functions import matrix_fig, update_fig
 
 """
 Section for how embeddings work.
@@ -20,15 +20,21 @@ md = [
     So before we can use our Transformer, we have to turn our sentence
     into a bunch of numbers.
 
-    Here, click on one of the words to see how it works.
-
+    Here's how it looks for the first few words of our movie review:
+    """),
+    dcc.Markdown("""
     When you choose a word, you are looking up its value in a dictionary
     called an **embedding layer**. In this case, the embedding layer
     simply assigns each word a set of 128 random floating point values,
-    in something approaching a standard normal distribution.
+    in something approaching a standard normal distribution. We call the
+    size of the embedding **d**, for **dimension**.
 
     The result of the dictionary lookup -- the 'definition' of the word --
-    is called an **embedding**.
+    is called an **embedding**. When we embed the entire text of **T** tokens,
+    we end up with a matrix of shape **(T,d)**, the number of tokens by the
+    size of each embedding.
+
+    Here's how the whole sequence looks when embedded.
     """
     ),
     dcc.Markdown(
@@ -78,22 +84,21 @@ def make_layout(params):
     combo = embed + pos
 
     embed_fig = matrix_fig(embed[:5], "word embeddings", ylabels=sample[:5])
-    pos_fig = matrix_fig(
-        pos[:5],
-        "position embeddings",
-        ylabels=["(first)", "(second)", "(third)", "(fourth)", "(fifth)"],
-    )
+    embed_fig2 = update_fig(params, 'embedding', 'word embeddings')
+    pos_fig = matrix_fig(pos,"position embeddings")
     combo_fig = matrix_fig(combo[:5], "word + position", ylabels=sample[:5])
 
     layout = html.Div(
         [
-            html.H1("Embeddings", id="embed-section"),
+            html.H1("Embeddings"),
             html.Hr(),
             md[0],  # markdown
             embed_fig,
             md[1],
-            pos_fig,
+            embed_fig2,
             md[2],
+            pos_fig,
+            md[3],
             combo_fig,
         ]
     )

@@ -13,8 +13,8 @@ def matrix_fig(matrix, title, key=None, ylabels=None):
         matrix,
         labels=dict(x="data dimension (d)", y="tokens (T)", color="value"),
         y=ylabels,
-        # zmin=-3,
-        # zmax=3,
+        #zmin=-3,
+        #zmax=3,
         aspect="equal",
         title=title,
     )

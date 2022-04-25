@@ -1,11 +1,8 @@
 import pickle
 
 import dash_bootstrap_components as dbc
-from dash import dcc
-from dash import html
-from dash.dependencies import Input
-from dash.dependencies import Output
-from dash.dependencies import State
+from dash import dcc, html
+from dash.dependencies import Input, Output, State
 from maindash import app
 from scipy.special import softmax
 
@@ -58,7 +55,8 @@ def make_single_layout():
     content = html.Div(
         [
             intro.make_layout(params),
-            embed.make_layout(params),
+            html.Div(embed.make_layout(params),
+                id='embed-section'),
             attn.get_layout(params),
             nln.get_layout(params),
             decoder.get_layout(),
@@ -78,7 +76,6 @@ def displayer(data):
 """
 Update the data to reflect a selected word from the cytoscape.
 """
-
 
 @app.callback(
     Output("datastore", "data"),
@@ -102,3 +99,11 @@ def selectHelper(selections, mouseover, dropdown_value, data):
     else:
         data["selected_word_ix"] = None
     return data
+
+@app.callback(Output("embed-section","children"),
+        Input("datastore","data"))
+def update_embed(params):
+    if not params:
+        return
+    else:
+        return embed.make_layout(params)
