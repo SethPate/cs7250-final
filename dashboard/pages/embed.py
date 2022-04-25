@@ -1,8 +1,12 @@
 import dash
-from dash import dcc, html
-from dash.dependencies import Input,Output,State
+from dash import dcc
+from dash import html
+from dash.dependencies import Input
+from dash.dependencies import Output
+from dash.dependencies import State
 from maindash import app
-from utils.functions import matrix_fig, update_fig
+from utils.functions import matrix_fig
+from utils.functions import update_fig
 
 """
 Section for how embeddings work.
@@ -85,7 +89,9 @@ def make_layout(params):
     embed = layerdata["embedding"]
     pos = layerdata["position"]
     combo = embed + pos
-    embed_fig = matrix_fig(embed[:5], "word embeddings", key="embedding", ylabels=sample[:5])
+    embed_fig = matrix_fig(
+        embed[:5], "word embeddings", key="embedding", ylabels=sample[:5]
+    )
     embed_fig2 = update_fig(params, "embedding", "word embeddings")
     pos_fig = matrix_fig(pos, "position embeddings")
     combo_fig = matrix_fig(combo[:5], "word + position", ylabels=sample[:5])
@@ -95,17 +101,18 @@ def make_layout(params):
             html.H1("Embeddings"),
             html.Hr(),
             md[0],  # markdown
-            html.Div(id='embed_fig'),
+            html.Div(id="embed_fig"),
             md[1],
-            html.Div(id='embed_fig2'),
+            html.Div(id="embed_fig2"),
             md[2],
-            html.Div(id='pos_fig'),
+            html.Div(id="pos_fig"),
             md[3],
-            html.Div(id='combo_fig'),
+            html.Div(id="combo_fig"),
         ]
     )
 
     return layout
+
 
 @app.callback(Output("embed_fig", "children"), Input("datastore", "data"))
 def update_embed_fig(params):
@@ -135,6 +142,7 @@ def update_pos(params):
         raise dash.exceptions.PreventUpdate
     else:
         return update_fig(params, "position", "position")
+
 
 @app.callback(Output("combo_fig", "children"), Input("datastore", "data"))
 def update_combo(params):
