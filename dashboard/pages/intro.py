@@ -28,7 +28,7 @@ def make_layout(params):
             * [OpenAI's DALL-E 2](https://openai.com/blog/dall-e/), which uses Transformers to learn the relationship between text and images.
 
             Transformers are much more successful than the recurrent
-            neural networks they replaced. For one, they are much easier 
+            neural networks they replaced. For one, they are much easier
             to train because they are highly parallelizable,
             enabling larger model size and dataset size.
             In Google's case, PaLM is 540bn parameters large -- the largest
@@ -40,6 +40,7 @@ def make_layout(params):
             Put simply,
 
             '''),
+            make_dropdown(params),
             html.Div(id='show-sample'),
         ],
         id="home",
