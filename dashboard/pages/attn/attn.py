@@ -33,7 +33,7 @@ def get_spans(params):
     words = params['layerdata'][sample_ix]['sample']
     attn_weights = params['layerdata'][sample_ix]['attention']
 
-    if not selected_word_ix: # need not be selected
+    if selected_word_ix is None: # need not be selected
         attn = np.ones(len(words))
     else:
         attn = [attn_weights[selected_word_ix][i] \
