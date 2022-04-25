@@ -1,6 +1,7 @@
 from dash import dcc
 from dash import html
-from utils.functions import matrix_fig, update_fig
+from utils.functions import matrix_fig
+from utils.functions import update_fig
 
 """
 Section for how embeddings work.
@@ -21,8 +22,10 @@ md = [
     into a bunch of numbers.
 
     Here's how it looks for the first few words of our movie review:
-    """),
-    dcc.Markdown("""
+    """
+    ),
+    dcc.Markdown(
+        """
     When you choose a word, you are looking up its value in a dictionary
     called an **embedding layer**. In this case, the embedding layer
     simply assigns each word a set of 128 random floating point values,
@@ -82,10 +85,9 @@ def make_layout(params):
     embed = layerdata["embedding"]
     pos = layerdata["position"]
     combo = embed + pos
-
-    embed_fig = matrix_fig(embed[:5], "word embeddings", ylabels=sample[:5])
-    embed_fig2 = update_fig(params, 'embedding', 'word embeddings')
-    pos_fig = matrix_fig(pos,"position embeddings")
+    embed_fig = matrix_fig(embed[:5], "word embeddings", key="embedding", ylabels=sample[:5])
+    embed_fig2 = update_fig(params, "embedding", "word embeddings")
+    pos_fig = matrix_fig(pos, "position embeddings")
     combo_fig = matrix_fig(combo[:5], "word + position", ylabels=sample[:5])
 
     layout = html.Div(

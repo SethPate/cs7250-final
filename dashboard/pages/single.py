@@ -1,8 +1,12 @@
 import pickle
 
+import dash
 import dash_bootstrap_components as dbc
-from dash import dcc, html
-from dash.dependencies import Input, Output, State
+from dash import dcc
+from dash import html
+from dash.dependencies import Input
+from dash.dependencies import Output
+from dash.dependencies import State
 from maindash import app
 from scipy.special import softmax
 
@@ -43,7 +47,7 @@ def make_single_layout():
 
     # init params and grab data
     params = {
-        "current_sample_ix": 1,
+        "current_sample_ix": 0,
         "selected_word_ix": 0,
     }
     params["update_figs"] = True
@@ -55,8 +59,7 @@ def make_single_layout():
     content = html.Div(
         [
             intro.make_layout(params),
-            html.Div(embed.make_layout(params),
-                id='embed-section'),
+            html.Div(embed.make_layout(params), id="embed-section"),
             attn.get_layout(params),
             nln.get_layout(params),
             decoder.get_layout(),
@@ -77,6 +80,7 @@ def displayer(data):
 Update the data to reflect a selected word from the cytoscape.
 """
 
+
 @app.callback(
     Output("datastore", "data"),
     Input("attn-cyto", "selectedNodeData"),
@@ -86,12 +90,11 @@ Update the data to reflect a selected word from the cytoscape.
 )
 def selectHelper(selections, mouseover, dropdown_value, data):
     sample = int(dropdown_value.split(" ")[-1]) - 1
-    print(sample)
     if sample != data["current_sample_ix"]:
         data["current_sample_ix"] = sample
         data["update_figs"] = True
     else:
-        data["update_figs"] = False
+        data["update_figs"] = True
     if selections:
         data["selected_word_ix"] = selections[0]["ix"]
     elif mouseover:
@@ -100,10 +103,12 @@ def selectHelper(selections, mouseover, dropdown_value, data):
         data["selected_word_ix"] = None
     return data
 
-@app.callback(Output("embed-section","children"),
-        Input("datastore","data"))
+
+@app.callback(Output("embed-section", "children"), Input("datastore", "data"))
 def update_embed(params):
     if not params:
         return
+    elif params["update_figs"] is False:
+        raise dash.exceptions.PreventUpdate
     else:
         return embed.make_layout(params)

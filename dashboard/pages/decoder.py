@@ -1,3 +1,4 @@
+import dash
 from dash import dcc
 from dash import html
 from dash.dependencies import Input
@@ -6,7 +7,7 @@ from dash.dependencies import State
 from maindash import app
 from utils.functions import matrix_fig
 from utils.functions import update_fig
-import dash
+
 
 def get_layout():
     return html.Div(
@@ -29,13 +30,13 @@ def get_layout():
             have more complicated decoders. Translation network. Decoder-only.
         """
             ),
-            html.Div(id="decoder"),
+            html.Div(dcc.Graph(id="decoder")),
             dcc.Markdown(
                 """
             logistic pass
             """
             ),
-            html.Div(id="final"),
+            html.Div(dcc.Graph(id="final")),
             dcc.Markdown(
                 """
             closing copy
@@ -45,7 +46,7 @@ def get_layout():
     )
 
 
-@app.callback(Output("decoder", "children"), Input("datastore", "data"))
+@app.callback(Output("decoder", "figure"), Input("datastore", "data"))
 def update_decoder(params):
     if not params:
         return
@@ -55,7 +56,7 @@ def update_decoder(params):
         return update_fig(params, "decoder", "decoder")
 
 
-@app.callback(Output("final", "children"), Input("datastore", "data"))
+@app.callback(Output("final", "figure"), Input("datastore", "data"))
 def update_final(params):
     if not params:
         return

@@ -13,6 +13,7 @@ def get_layout(params):
     layout = html.Div(
         [
             html.H1("Nonlinearity", id="nln-section"),
+            html.Div(),
             html.Hr(),
             dcc.Markdown(
                 """
@@ -20,7 +21,7 @@ def get_layout(params):
 
         """
             ),
-            html.Div(id="linear"),
+            html.Div(dcc.Graph(id="linear")),
             dcc.Markdown(
                 """
         ## residual connections
@@ -28,7 +29,7 @@ def get_layout(params):
         - show three layers residually
         """
             ),
-            html.Div(id="relu"),
+            html.Div(dcc.Graph(id="relu")),
             dcc.Markdown(
                 """
         ## layer norm
@@ -44,7 +45,7 @@ def get_layout(params):
     return layout
 
 
-@app.callback(Output("linear", "children"), Input("datastore", "data"))
+@app.callback(Output("linear", "figure"), Input("datastore", "data"))
 def update_linear(params):
     if not params:
         return
@@ -54,7 +55,7 @@ def update_linear(params):
         return update_fig(params, "linear", "linear")
 
 
-@app.callback(Output("relu", "children"), Input("datastore", "data"))
+@app.callback(Output("relu", "figure"), Input("datastore", "data"))
 def update_relu(params):
     if not params:
         return
@@ -64,7 +65,7 @@ def update_relu(params):
         return update_fig(params, "relu", "ReLU")
 
 
-@app.callback(Output("norm", "children"), Input("datastore", "data"))
+@app.callback(Output("norm", "figure"), Input("datastore", "data"))
 def update_norm(params):
     if not params:
         return
