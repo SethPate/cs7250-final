@@ -1,7 +1,8 @@
-from dash import dcc
-from dash import html
-from utils.functions import matrix_fig
-from utils.functions import update_fig
+import dash
+from dash import dcc, html
+from dash.dependencies import Input,Output,State
+from maindash import app
+from utils.functions import matrix_fig, update_fig
 
 """
 Section for how embeddings work.
@@ -45,7 +46,6 @@ md = [
     ## adding position information
 
     Transformer models don't have any inherent sense of position.
-    To the Transformer, both of these sequences look the same:
 
     This is a good thing, because then they can do most of their work
     in parallel, as we'll see later.
@@ -95,14 +95,52 @@ def make_layout(params):
             html.H1("Embeddings"),
             html.Hr(),
             md[0],  # markdown
-            embed_fig,
+            html.Div(id='embed_fig'),
             md[1],
-            embed_fig2,
+            html.Div(id='embed_fig2'),
             md[2],
-            pos_fig,
+            html.Div(id='pos_fig'),
             md[3],
-            combo_fig,
+            html.Div(id='combo_fig'),
         ]
     )
 
     return layout
+
+@app.callback(Output("embed_fig", "children"), Input("datastore", "data"))
+def update_embed_fig(params):
+    if not params:
+        return
+    elif params["update_figs"] is False:
+        raise dash.exceptions.PreventUpdate
+    else:
+        return update_fig(params, "embedding", "embed")
+
+
+@app.callback(Output("embed_fig2", "children"), Input("datastore", "data"))
+def update_embed_fig2(params):
+    if not params:
+        return
+    elif params["update_figs"] is False:
+        raise dash.exceptions.PreventUpdate
+    else:
+        return update_fig(params, "embedding", "embed2")
+
+
+@app.callback(Output("pos_fig", "children"), Input("datastore", "data"))
+def update_pos(params):
+    if not params:
+        return
+    elif params["update_figs"] is False:
+        raise dash.exceptions.PreventUpdate
+    else:
+        return update_fig(params, "position", "position")
+
+@app.callback(Output("combo_fig", "children"), Input("datastore", "data"))
+def update_combo(params):
+    if not params:
+        return
+    elif params["update_figs"] is False:
+        raise dash.exceptions.PreventUpdate
+    else:
+        return update_fig(params, "combined", "words + position")
