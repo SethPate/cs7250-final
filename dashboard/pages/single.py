@@ -46,9 +46,10 @@ def make_single_layout():
 
     # init params and grab data
     params = {
-        "current_sample_ix": 0,
+        "current_sample_ix": 1,
         "selected_word_ix": 0,
     }
+    params["update_figs"] = True
     params["layerdata"] = get_dummy_data(params)
 
     # make all the layouts and put em together
@@ -88,7 +89,12 @@ Update the data to reflect a selected word from the cytoscape.
 )
 def selectHelper(selections, mouseover, dropdown_value, data):
     sample = int(dropdown_value.split(" ")[-1]) - 1
-    data["current_sample_ix"] = sample
+    print(sample)
+    if sample != data["current_sample_ix"]:
+        data["current_sample_ix"] = sample
+        data["update_figs"] = True
+    else:
+        data["update_figs"] = False
     if selections:
         data["selected_word_ix"] = selections[0]["ix"]
     elif mouseover:
