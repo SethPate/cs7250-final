@@ -57,10 +57,18 @@ def get_spans(params):
     for i, w in enumerate(words):
         display = w + " "
         o = opacity[i]
+        a = attn[i]
         _id = f"span_{i}"
-        span = html.Span(display, id=_id, className="attn-text", style={"opacity": o})
+        span = html.Span(
+            display,
+            id=_id,
+            className="attn-text",
+            style={"opacity": o, "display": "inline-block", "padding": "2px"},
+        )
         spans.append(span)
-        tooltip = dbc.Tooltip(f"attn value: {round(o,2)}", target=_id)
+        tooltip = dbc.Tooltip(
+            f"attn value: {round(a,2)}", target=_id, id="tooltip" + _id, placement = "bottom-start"
+        )
         tooltips.append(tooltip)
 
     # tooltips to show attn value on hover
