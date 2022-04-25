@@ -1,3 +1,4 @@
+import dash
 import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
 import numpy as np
@@ -189,6 +190,8 @@ def update_cyto(params):
 def update_qkv(params):
     if not params:
         return
+    elif params["update_figs"] is False:
+        raise dash.exceptions.PreventUpdate
     else:
         return
         # return update_fig(params, 'linear', "query, key, value")
@@ -198,6 +201,8 @@ def update_qkv(params):
 def update_qk(params):
     if not params:
         return
+    elif params["update_figs"] is False:
+        raise dash.exceptions.PreventUpdate
     else:
         return update_fig(params, "qk", "query * key")
 
@@ -206,6 +211,8 @@ def update_qk(params):
 def update_scaled(params):
     if not params:
         return
+    elif params["update_figs"] is False:
+        raise dash.exceptions.PreventUpdate
     else:
         return update_fig(params, "scaled", "scaled")
 
@@ -214,6 +221,8 @@ def update_scaled(params):
 def update_attention(params):
     if not params:
         return
+    elif params["update_figs"] is False:
+        raise dash.exceptions.PreventUpdate
     else:
         return update_fig(params, "attention", "attention")
 
@@ -222,6 +231,8 @@ def update_attention(params):
 def update_attn_value(params):
     if not params:
         return
+    elif params["update_figs"] is False:
+        raise dash.exceptions.PreventUpdate
     else:
         return update_fig(params, "attn_value", "attention * value")
 

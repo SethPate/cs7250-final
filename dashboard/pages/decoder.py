@@ -6,7 +6,7 @@ from dash.dependencies import State
 from maindash import app
 from utils.functions import matrix_fig
 from utils.functions import update_fig
-
+import dash
 
 def get_layout():
     return html.Div(
@@ -49,6 +49,8 @@ def get_layout():
 def update_decoder(params):
     if not params:
         return
+    elif params["update_figs"] is False:
+        raise dash.exceptions.PreventUpdate
     else:
         return update_fig(params, "decoder", "decoder")
 
@@ -57,5 +59,7 @@ def update_decoder(params):
 def update_final(params):
     if not params:
         return
+    elif params["update_figs"] is False:
+        raise dash.exceptions.PreventUpdate
     else:
         return update_fig(params, "final", "final")
