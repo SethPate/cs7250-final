@@ -31,11 +31,11 @@ def toggle_collapse(n, is_open):
 
 def make_dropdown(params):
     samples = [0, 1]
-    strs = ['negative :(', 'positive :)']
+    strs = ["negative :(", "positive :)"]
     sample_ids = [f"Sample {samples[i]+1} - {strs[i]}" for i in range(len(samples))]
     return html.Div(
         [
-            dcc.Dropdown(sample_ids, sample_ids[0], id="dropdown-samples"),
+            dcc.Dropdown(sample_ids, sample_ids[0], id="dropdown-samples", clearable=False),
         ],
     )
 
@@ -66,31 +66,34 @@ def get_sidebar(params):
                 id="blurb",
             ),
             # use the Collapse component to animate hiding / revealing links
-                dbc.Nav(
-                    [
-                        dbc.NavLink(html.A("Intro", href="#home"), active="exact"),
-                        dbc.NavLink(html.A("Task", href="#task-section"), active="exact"),
-                        dbc.NavLink(
-                            html.A("Embeddings", href="#embed-section"), active="exact"
-                        ),
-                        dbc.NavLink(
-                            html.A("Attention", href="#attn-section"), active="exact"
-                        ),
-                        dbc.NavLink(
-                            html.A("Nonlinearity", href="#nln-section"), active="exact"
-                        ),
-                        dbc.NavLink(
-                            html.A("Decoder", href="#decoder-section"), active="exact"
-                        ),
-                    ],
-                    vertical=True,
-                    pills=True,
-                ),
-            html.Div([
-                html.Hr(),
-                html.P("Use the dropdown to switch between sample texts!"),
-                make_dropdown(params),
-                ], style={'text-align':'center'}),
+            dbc.Nav(
+                [
+                    dbc.NavLink(html.A("Intro", href="#home"), active="exact"),
+                    dbc.NavLink(html.A("Task", href="#task-section"), active="exact"),
+                    dbc.NavLink(
+                        html.A("Embeddings", href="#embed-section"), active="exact"
+                    ),
+                    dbc.NavLink(
+                        html.A("Attention", href="#attn-section"), active="exact"
+                    ),
+                    dbc.NavLink(
+                        html.A("Nonlinearity", href="#nln-section"), active="exact"
+                    ),
+                    dbc.NavLink(
+                        html.A("Decoder", href="#decoder-section"), active="exact"
+                    ),
+                ],
+                vertical=True,
+                pills=True,
+            ),
+            html.Div(
+                [
+                    html.Hr(),
+                    html.P("Use the dropdown to switch between sample texts!"),
+                    make_dropdown(params),
+                ],
+                style={"text-align": "center"},
+            ),
         ],
         id="sidebar",
     )
