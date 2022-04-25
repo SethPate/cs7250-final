@@ -2,6 +2,17 @@ from dash import dcc, html
 from dash.dependencies import Input,Output,State
 from maindash import app
 
+def make_dropdown(params):
+    ix = params["current_sample_ix"]
+    samples = [0, 1]
+    sample_ids = [f"Sample {i+1}" for i in samples]
+    return html.Div(
+        [
+            dcc.Dropdown(sample_ids, sample_ids[0], id="dropdown-samples"),
+        ],
+    )
+
+
 def make_layout(params):
 
     return html.Div(
