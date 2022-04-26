@@ -39,18 +39,14 @@ def get_sidebar(params):
 
     # we use the Row and Col components to construct the sidebar header
     # it consists of a title, and a toggle, the latter is hidden on large screens
-    sidebar_header = dbc.Row(
-        [
-            dbc.Col(
-                dcc.Link([html.H2([
-                        html.Span("Pretty\n",
-                            style={"color":"#cc4778"}),
-                        html.Span("Transformers",
-                            style={"color":"#7e03a8"})
-                        ])
-                    ], href='/app')),
-        ]
-    )
+    sidebar_header = dbc.Row([
+        dcc.Link(
+            html.H2([
+                html.Span("Pretty\n", style={"color":"#cc4778"}),
+                html.Span("Transformers", style={"color":"#7e03a8"}),
+                ]),
+            href='/app', style={"text-decoration":"none"})
+        ])
 
     sidebar_layout = html.Div(
         [
