@@ -24,10 +24,10 @@ def toggle_collapse(n, is_open):
     return is_open
 
 
-def make_dropdown(params):
+def make_dropdown():
     samples = [0, 1]
     strs = ["negative :(", "positive :)"]
-    sample_ids = [f"Sample {samples[i]+1} - {strs[i]}" for i in range(len(samples))]
+    sample_ids = [f"sample {samples[i]+1} - {strs[i]}" for i in range(len(samples))]
     return html.Div(
         [
             dcc.Dropdown(sample_ids, sample_ids[0], id="dropdown-samples", clearable=False),
@@ -35,17 +35,15 @@ def make_dropdown(params):
     )
 
 
-def get_sidebar(params):
+def get_sidebar():
 
-    # we use the Row and Col components to construct the sidebar header
-    # it consists of a title, and a toggle, the latter is hidden on large screens
     sidebar_header = dbc.Row([
         dcc.Link(
             html.H2([
                 html.Span("Pretty\n", style={"color":"#cc4778"}),
                 html.Span("Transformers", style={"color":"#7e03a8"}),
                 ]),
-            href='/app', style={"text-decoration":"none"})
+            href='/', style={"text-decoration":"none"})
         ])
 
     sidebar_layout = html.Div(
@@ -62,17 +60,16 @@ def get_sidebar(params):
                     ),
                 ],
                 id="blurb",
-                #style={'text-align':'center'},
             ),
             # use the Collapse component to animate hiding / revealing links
             dbc.Nav(
                 [
-                    dbc.NavLink("Intro", href="/"),
-                    dbc.NavLink("Task", href="#task-section"),
-                    dbc.NavLink("Embeddings", href="#embed-section"),
-                    dbc.NavLink("Attention", href="#attn-section"),
-                    dbc.NavLink("Nonlinearity", href="#nln-section"),
-                    dbc.NavLink("Decoder", href="#decoder-section"),
+                    dbc.NavLink("Intro", href="/#start"),
+                    dbc.NavLink("Task", href="/#task-section", external_link=True),
+                    dbc.NavLink("Embeddings", href="/#embed-section", external_link=True),
+                    dbc.NavLink("Attention", href="/#attn-section", external_link=True),
+                    dbc.NavLink("Nonlinearity", href="/#nln-section", external_link=True),
+                    dbc.NavLink("Decoder", href="/#decoder-section", external_link=True),
                 ],
                 vertical=True,
                 pills=True,
@@ -81,7 +78,7 @@ def get_sidebar(params):
                 [
                     html.Hr(),
                     html.P("Switch between samples!"),
-                    make_dropdown(params),
+                    make_dropdown(),
                 ],
                 style={"text-align": "center"},
             ),

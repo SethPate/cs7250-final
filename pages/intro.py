@@ -11,6 +11,8 @@ def make_layout(params):
 
     return html.Div(
         [
+            html.H1("Introducing the Transformer",
+                id="start"),
             dcc.Markdown(
                 """
             Transformer networks are the basic technology enabling modern
@@ -29,7 +31,7 @@ def make_layout(params):
             ),
             html.Div(
                 html.Img(
-                    src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgz-gW-L-HTRNa4FFX_HrnUnoQhXc2b7tjd-NFV_3KqG0n2pDrPzAhP-3Zx70jtygkDZV_VeE6u-XCjRWgY3ec_Ise8lK02iRuv6VzhJcayGnze6fv65oc3TgZ6JvfRso_xCW56-xI4xnScI0-oVsOu2kH3mBoU1CvtBVD99twdUtqsxyJj1DlAt3m1nQ/s1172/Screenshot%202022-04-01%205.25.47%20PM.png",
+                    src=app.get_asset_url("loglin.png"),
                     alt="log linear relationship graph",
                     style={"width": 500, "height": "auto"},
                 ),
@@ -51,11 +53,11 @@ def make_layout(params):
                 Although the dataset has 50k samples total, we'll only show two of them here:
             """),
             html.Div([
-                html.Img(src="https://m.media-amazon.com/images/M/MV5BNGYyN2M0YmQtYWY5Ni00YjE4LWIzNDktMDJiMjgzZjg4OGNlXkEyXkFqcGdeQXVyMTQ3Njg3MQ@@._V1_.jpg",
+                html.Img(src=app.get_asset_url("acrossthemoon.jpg"),
                     alt="movie poster for across the moon",
                     style={'width':200, 'height':'auto'},
                     ),
-                html.Img(src="https://upload.wikimedia.org/wikipedia/en/a/a6/The_Guardian_%282006_film%29_promotional_poster.jpg?20171215231323",
+                html.Img(src=app.get_asset_url("guardian.jpg"),
                     alt="movie poster for the guardian",
                     style={'width':200, 'height':'auto'},
                     ),

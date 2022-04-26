@@ -2,27 +2,15 @@ import pickle
 
 import dash
 import dash_bootstrap_components as dbc
-from dash import dcc
-from dash import html
-from dash.dependencies import Input
-from dash.dependencies import Output
-from dash.dependencies import State
+from dash import dcc, html
+from dash.dependencies import Input, Output, State
 from maindash import app
 from scipy.special import softmax
 
-from . import decoder
-from . import embed
-from . import intro
-from . import nln
-from . import sidebar
+from . import intro, embed, nln, sidebar, decoder
 from .attn import attn
 
-"""
-Experimental single scroll layout.
-"""
-
 fake_data_path = "./data/fake_data.pickl"
-
 
 def get_dummy_data(params):
     """
@@ -63,11 +51,13 @@ about_layout = html.Div([
     html.H1("About Pretty Transformers"),
     ])
 
+sidebar = sidebar.get_sidebar()
+
 """Pulls together all the content and structure pages."""
 main_layout = html.Div([
     # make all the layouts and put em together
     dcc.Location(id="url"),
-    sidebar.get_sidebar(params),
+    sidebar,
     # start by displaying app
     html.Div(app_layout, id='page-content'),
     ])
