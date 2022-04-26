@@ -1,6 +1,8 @@
 dash
+dash_cytoscape
 dash_bootstrap_components
 plotly
 numpy
 scipy
 gunicorn
+pandas
