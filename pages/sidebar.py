@@ -1,11 +1,7 @@
 import dash_bootstrap_components as dbc
-from dash import dcc
-from dash import html
-from dash.dependencies import Input
-from dash.dependencies import Output
-from dash.dependencies import State
+from dash import dcc, html
+from dash.dependencies import Input, Output, State
 from maindash import app
-
 
 @app.callback(
     Output("sidebar", "className"),
@@ -16,7 +12,6 @@ def toggle_classname(n, classname):
     if n and classname == "":
         return "collapsed"
     return ""
-
 
 @app.callback(
     Output("collapse", "is_open"),
@@ -46,12 +41,14 @@ def get_sidebar(params):
     # it consists of a title, and a toggle, the latter is hidden on large screens
     sidebar_header = dbc.Row(
         [
-            dbc.Col(html.H2([
-                html.Span("Pretty\n",
-                    style={"color":"#cc4778"}),
-                html.Span("Transformers",
-                    style={"color":"#7e03a8"})
-                ]))
+            dbc.Col(
+                dcc.Link([html.H2([
+                        html.Span("Pretty\n",
+                            style={"color":"#cc4778"}),
+                        html.Span("Transformers",
+                            style={"color":"#7e03a8"})
+                        ])
+                    ], href='/app')),
         ]
     )
 
@@ -74,20 +71,12 @@ def get_sidebar(params):
             # use the Collapse component to animate hiding / revealing links
             dbc.Nav(
                 [
-                    dbc.NavLink(html.A("Intro", href="#home"), active="exact"),
-                    dbc.NavLink(html.A("Task", href="#task-section"), active="exact"),
-                    dbc.NavLink(
-                        html.A("Embeddings", href="#embed-section"), active="exact"
-                    ),
-                    dbc.NavLink(
-                        html.A("Attention", href="#attn-section"), active="exact"
-                    ),
-                    dbc.NavLink(
-                        html.A("Nonlinearity", href="#nln-section"), active="exact"
-                    ),
-                    dbc.NavLink(
-                        html.A("Decoder", href="#decoder-section"), active="exact"
-                    ),
+                    dbc.NavLink("Intro", href="/"),
+                    dbc.NavLink("Task", href="#task-section"),
+                    dbc.NavLink("Embeddings", href="#embed-section"),
+                    dbc.NavLink("Attention", href="#attn-section"),
+                    dbc.NavLink("Nonlinearity", href="#nln-section"),
+                    dbc.NavLink("Decoder", href="#decoder-section"),
                 ],
                 vertical=True,
                 pills=True,
@@ -95,11 +84,15 @@ def get_sidebar(params):
             html.Div(
                 [
                     html.Hr(),
-                    html.P("Use the dropdown to switch between sample texts!"),
+                    html.P("Switch between samples!"),
                     make_dropdown(params),
                 ],
                 style={"text-align": "center"},
             ),
+            html.Div([
+                html.Hr(),
+                dcc.Link("about pretty transformers", href="/about"),
+                ], style={'text-align':'center'}),
         ],
         id="sidebar",
     )

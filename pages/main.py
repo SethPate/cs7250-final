@@ -41,46 +41,52 @@ def get_dummy_data(params):
 
     return fake_data
 
+# init params and grab data
+params = {
+    "current_sample_ix": -1,
+    "selected_word_ix": 0,
+}
+params["update_figs"] = True
+params["layerdata"] = get_dummy_data(params)
 
-def make_single_layout():
-    """Pulls together all the content and structure pages."""
+# app page
+app_layout = html.Div(
+    [
+        intro.make_layout(params),
+        embed.make_layout(params),
+        attn.get_layout(params),
+        nln.get_layout(params),
+        decoder.get_layout(),
+    ])
 
-    # init params and grab data
-    params = {
-        "current_sample_ix": -1,
-        "selected_word_ix": 0,
-    }
-    params["update_figs"] = True
-    params["layerdata"] = get_dummy_data(params)
+about_layout = html.Div([
+    html.H1("About Pretty Transformers"),
+    ])
 
+"""Pulls together all the content and structure pages."""
+main_layout = html.Div([
     # make all the layouts and put em together
-    loc = dcc.Location(id="url")
-    sb = sidebar.get_sidebar(params)
-    content = html.Div(
-        [
-            intro.make_layout(params),
-            embed.make_layout(params),
-            attn.get_layout(params),
-            nln.get_layout(params),
-            decoder.get_layout(),
-        ],
-        id="page-content",
-    )
+    dcc.Location(id="url"),
+    sidebar.get_sidebar(params),
+    # start by displaying app
+    html.Div(app_layout, id='page-content'),
+    ])
 
-    return html.Div([loc, sb, content])
-
-
-# Test case to show the selection reactively
-@app.callback(Output("display", "children"), Input("datastore", "data"))
-def displayer(data):
-    return data["selected_word_ix"]
-
+"""
+Manage multiple pages (for 'about' page)
+"""
+@app.callback(
+    Output("page-content","children"),
+    Input("url","pathname"))
+def switch_pages(pathname):
+    if pathname == '/about':
+        return about_layout
+    else:
+        return app_layout
 
 """
 Update the data to reflect a selected word from the cytoscape.
 """
-
-
 @app.callback(
     Output("datastore", "data"),
     Input("attn-cyto", "selectedNodeData"),

@@ -11,8 +11,6 @@ def make_layout(params):
 
     return html.Div(
         [
-            #html.H1("Transformers and You"),
-            #html.Hr(),
             dcc.Markdown(
                 """
             Transformer networks are the basic technology enabling modern
