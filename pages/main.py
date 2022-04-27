@@ -7,7 +7,7 @@ from dash.dependencies import Input, Output, State
 from maindash import app
 from scipy.special import softmax
 
-from . import intro, embed, nln, sidebar, decoder
+from . import intro, embed, nln, sidebar, decoder, about
 from .attn import attn
 
 fake_data_path = "./data/fake_data.pickl"
@@ -47,11 +47,8 @@ app_layout = html.Div(
         decoder.get_layout(),
     ])
 
-about_layout = html.Div([
-    html.H1("About Pretty Transformers"),
-    ])
-
 sidebar = sidebar.get_sidebar()
+
 
 """Pulls together all the content and structure pages."""
 main_layout = html.Div([
@@ -70,7 +67,7 @@ Manage multiple pages (for 'about' page)
     Input("url","pathname"))
 def switch_pages(pathname):
     if pathname == '/about':
-        return about_layout
+        return about.layout
     else:
         return app_layout
 
