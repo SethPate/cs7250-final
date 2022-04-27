@@ -1,8 +1,7 @@
 Final Project for cs7250 -- Data Visualization
 Seth Pate, Alberto Ceballos Arroyo, Tonia Wang
 
-This app is currently hosted at [https://pretty-transformers.herokuapp.com]
-(https://pretty-transformers.herokuapp.com/). 
+This app is currently hosted at https://pretty-transformers.herokuapp.com.
 There's a detailed 'about' section there.
 
 If you're impressed by how slow Heroku loads things, you can try running it locally.
